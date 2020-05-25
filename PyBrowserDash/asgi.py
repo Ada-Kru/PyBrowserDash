@@ -18,13 +18,14 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyBrowserDash.settings")
 
 django_app = get_asgi_application()
 ws_connections = set()
-foobar2k_listener = foobar2k_event_listener(ws_connections)
+audio_event_listener = foobar2k_event_listener(ws_connections)
 
 
 async def application(scope, receive, send):
-    if not foobar2k_listener.is_started():
-        create_task(foobar2k_listener.listen())
+    if not audio_event_listener.is_started():
+        create_task(audio_event_listener.listen())
     scope["ws_connections"] = ws_connections
+    scope["audio_event_listener"] = audio_event_listener
     scope_type = scope["type"]
 
     if scope_type == "http":

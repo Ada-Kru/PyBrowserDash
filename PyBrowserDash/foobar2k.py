@@ -37,17 +37,16 @@ class foobar2k_event_listener():
     def state_changed(self, state):
         """Update the current player state and all clients."""
         self._current_state = state
-        try:
-            self.update_all_clients()
-        except Exception as err:
-            print(err)
+        self.update_all_clients()
+
+    def update_client(self, client):
+        """Send player state to a single clent."""
+        client.send_msg(self.make_update_str())
 
     def update_all_clients(self):
         """Send updates to clients."""
-        print("here")
-        if self._current_state is not None:
-            for connection in self._ws_connections:
-                connection.send_msg(self.make_update_str())
+        for connection in self._ws_connections:
+            connection.send_msg(self.make_update_str())
 
     def make_update_str(self):
         """Make a JSON string for websocket updates."""
