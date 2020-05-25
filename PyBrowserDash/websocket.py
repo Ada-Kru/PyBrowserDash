@@ -2,8 +2,11 @@ from asyncio import Queue, create_task, as_completed, CancelledError
 
 
 async def websocket_app(scope, receive, send):
+    ws_connections = scope["ws_connections"]
     connection = ws_connection(scope, receive, send)
+    ws_connections.add(connection)
     await connection.listen()
+    ws_connections.discard(connection)
 
 
 class ws_connection:
@@ -12,7 +15,7 @@ class ws_connection:
     def __init__(self, scope, receive, send):
         self.connected = False
         self.scope = scope
-        self.rec = receive
+        self.receive = receive
         self.send = send
         self.q = Queue()
 
@@ -36,24 +39,25 @@ class ws_connection:
     async def handle_events(self):
         """Handle websocket messages and events."""
         while True:
-            evt = await self.rec()
+            evt = await self.receive()
             evt_type = evt["type"]
 
             if evt_type == "websocket.receive":
                 if evt["text"] == "ping":
                     await self.send({"type": "websocket.send", "text": "pong"})
             elif evt_type == "websocket.connect":
-                self.scope["ws_connections"].add(self)
                 await self.send(
                     {"type": "websocket.accept", "status_code": 101}
                 )
                 self.connected = True
             elif evt_type == "websocket.disconnect":
                 self.connected = False
-                self.scope["ws_connections"].discard(self)
                 break
 
     def send_msg(self, msg):
         """Send a message over the websocket."""
         if self.connected:
             self.q.put_nowait(msg)
+            return True
+        else:
+            return False
