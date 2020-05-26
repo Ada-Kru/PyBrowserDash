@@ -1,0 +1,7 @@
+{
+  "from": "test.bat",
+  "message": "test message",
+  "type": "default",
+  "time": null,
+  "data": "{}"
+}

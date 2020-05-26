@@ -1,0 +1,1 @@
+curl -d "@new_msg_data.txt" -X POST -H "Content-Type:application/json" http://localhost:8000/messages/new/
