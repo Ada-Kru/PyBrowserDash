@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from json import loads, dumps, JSONDecodeError
 from .validation import new_msg_validator
 from validx import exc
+from .clean_message import clean_message
 
 
 def index(request):
@@ -19,9 +20,10 @@ def messages_new(request):
         raise Http404("Not Found")
 
     try:
-        msg_data = loads(request.body)
-        new_msg_validator(msg_data)
-        print(msg_data)
+        msg = loads(request.body)
+        new_msg_validator(msg)
+        clean_message(msg)
+        print(msg)
 
     except (exc.ValidationError, JSONDecodeError) as err:
         return HttpResponse(dumps({"error": str(err)}))
