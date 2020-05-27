@@ -23,6 +23,8 @@ def messages_new(request):
         msg = loads(request.body)
         new_msg_validator(msg)
         clean_message(msg)
+        if msg["type"] == "log":
+            msg["seen"] = True
         print(msg)
 
     except (exc.ValidationError, JSONDecodeError) as err:
