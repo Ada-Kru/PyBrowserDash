@@ -14,3 +14,5 @@ custom_message_types = {
         "class_name": "exampleClassName",
     }
 }
+
+WOL_COMMAND = r""

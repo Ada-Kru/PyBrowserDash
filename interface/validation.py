@@ -1,4 +1,4 @@
-from validx import Dict, Str, Datetime, Bool
+from validx import Dict, List, Str, Datetime, Bool
 from django.utils.dateparse import parse_datetime
 from datetime import timezone
 
@@ -16,3 +16,6 @@ new_msg_validator = Dict(
     },
     defaults={"type": "default", "time": None, "seen": False, "data": ""},
 )
+
+
+seen_messages_validator = List(Str(minlen=1, maxlen=32))
