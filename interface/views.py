@@ -5,6 +5,10 @@ from .validation import new_msg_validator
 from validx import exc
 from .clean_message import clean_message
 from .models import Message
+from .funcs import make_unused_id
+
+
+unseen = {}
 
 
 def index(request):
@@ -25,7 +29,20 @@ def messages_new(request):
         clean_message(msg)
         if msg["type"] == "log":
             msg["seen"] = True
-        print(msg)
+        # print(msg)
+
+        Message(
+            sender=msg["sender"],
+            text=msg["text"],
+            type=msg["type"],
+            time=msg["time"],
+            data=msg["data"],
+        ).save()
+        if not msg["seen"]:
+            msg_id = make_unused_id(unseen)
+            unseen[msg_id] = msg
+            for connection in request.scope["ws_connections"]:
+                connection.send_msg(dumps({"new_messages": [msg]}))
 
     except (exc.ValidationError, JSONDecodeError) as err:
         return HttpResponse(dumps({"error": str(err)}))
@@ -34,7 +51,7 @@ def messages_new(request):
 
 
 def messages_get(request, limit):
-    messages = Message.objects.order_by("msg_time")[:limit]
+    messages = Message.objects.order_by("time")[:limit]
     for msg in messages:
-        print(msg.msg_sender, msg.msg_text)
+        print(msg.sender, msg.text)
     return HttpResponse(f"Got {len(messages)} messages.")

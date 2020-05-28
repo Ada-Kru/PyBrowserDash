@@ -1,6 +1,6 @@
 {
   "sender": "test.bat",
-  "message": "test message",
+  "text": "test message",
   "type": "default",
   "time": "2020-05-26T17:50:20+00:00",
   "data": "{}"

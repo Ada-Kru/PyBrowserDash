@@ -6,14 +6,13 @@ from datetime import timezone
 new_msg_validator = Dict(
     {
         "sender": Str(minlen=1, maxlen=64),
-        "message": Str(minlen=1, maxlen=2048),
+        "text": Str(minlen=1, maxlen=2048),
         "type": Str(minlen=1, maxlen=32),
         "time": Datetime(
             nullable=True, parser=parse_datetime, tz=timezone.utc
         ),
-        "data": Str(minlen=1, maxlen=5120),
+        "data": Str(minlen=0, maxlen=5120),
         "seen": Bool(),
     },
-    defaults={"type": "default", "time": None, "seen": False},
-    optional=["data"],
+    defaults={"type": "default", "time": None, "seen": False, "data": ""},
 )

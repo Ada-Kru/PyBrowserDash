@@ -2,6 +2,7 @@ from interface.message_types import (
     NORMAL_MESSAGE,
     LOG_ONLY_MESSAGE,
     DELAYED_REPEAT_MESSAGE,
+    UNKNOWN_TYPE_MESSAGE,
 )
 
 
