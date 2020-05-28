@@ -11,6 +11,10 @@ urlpatterns = [
         views.messages_clear_unseen,
         name="messages_clear_unseen",
     ),
-    path("messages/<int:limit>/", views.messages_get, name="messages_get"),
+    path(
+        "messages/history/<int:limit>/",
+        views.messages_history,
+        name="messages_history",
+    ),
     path("W/", views.wake_on_lan, name="wake_on_lan"),
 ]

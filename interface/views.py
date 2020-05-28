@@ -8,6 +8,7 @@ from subprocess import call as sp_call
 from .clean_message import clean_message
 from .models import Message
 from .funcs import make_unused_id
+
 try:
     from PyBrowserDash.local_config import WOL_COMMAND
 except ImportError:
@@ -18,7 +19,6 @@ unseen = {}
 
 
 def index(request):
-    # print(request.scope)
     for connection in request.scope["ws_connections"]:
         connection.send_msg("testin")
     return HttpResponse("...")
@@ -56,13 +56,6 @@ def messages_new(request):
     return JsonResponse({"error": None}, status=201)
 
 
-def messages_get(request, limit):
-    messages = Message.objects.order_by("time")[:limit]
-    for msg in messages:
-        print(msg.sender, msg.text)
-    return JsonResponse({})
-
-
 @csrf_exempt
 def messages_unseen(request):
     if request.method == "POST":
@@ -85,10 +78,28 @@ def messages_clear_unseen(request):
         return JsonResponse({"error": None})
 
 
+def messages_history(request, limit):
+    db_messages = Message.objects.order_by("time")[:limit]
+    messages = []
+    for db_msg in db_messages:
+        messages.append(
+            {
+                "sender": db_msg.sender,
+                "text": db_msg.text,
+                "type": db_msg.type,
+                "time": db_msg.time,
+                "data": db_msg.data,
+            }
+        )
+    return JsonResponse({"error": None, "messages": messages})
+
+
 def wake_on_lan(request):
-    now = datetime.utcnow().replace(
-        microsecond=0, tzinfo=timezone.utc
-    ).isoformat()
+    now = (
+        datetime.utcnow()
+        .replace(microsecond=0, tzinfo=timezone.utc)
+        .isoformat()
+    )
     Message(
         sender="PyBrowserDash",
         text=f"WOL request from {request.META['REMOTE_ADDR']} at {now}",
@@ -96,5 +107,5 @@ def wake_on_lan(request):
         time=now,
         data="",
     ).save()
-    sp_call(('python', WOL_COMMAND))
+    sp_call(("python", WOL_COMMAND))
     return JsonResponse({"error": None})
