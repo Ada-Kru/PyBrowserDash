@@ -2,7 +2,7 @@ from asyncio import Queue, create_task, as_completed, CancelledError
 
 
 async def websocket_app(scope, receive, send):
-    ws_connections = scope["ws_connections"]
+    ws_connections = scope["background_tasks"].ws_connections
     connection = ws_connection(scope, receive, send)
     ws_connections.add(connection)
     await connection.listen()

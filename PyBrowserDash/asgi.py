@@ -11,21 +11,19 @@ import os
 
 from django.core.asgi import get_asgi_application
 from PyBrowserDash.websocket import websocket_app
-from PyBrowserDash.foobar2k import foobar2k_event_listener
 from asyncio import create_task
+from .background_tasks import BackgroundTasks
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyBrowserDash.settings")
 
 django_app = get_asgi_application()
-ws_connections = set()
-audio_event_listener = foobar2k_event_listener(ws_connections)
+bg_tasks = BackgroundTasks()
 
 
 async def application(scope, receive, send):
-    if not audio_event_listener.is_started():
-        create_task(audio_event_listener.listen())
-    scope["ws_connections"] = ws_connections
-    scope["audio_event_listener"] = audio_event_listener
+    if not bg_tasks.tasks_started():
+        create_task(bg_tasks.start_tasks())
+    scope["background_tasks"] = bg_tasks
     scope_type = scope["type"]
 
     if scope_type == "http":

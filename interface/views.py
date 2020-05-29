@@ -19,8 +19,7 @@ unseen = {}
 
 
 def index(request):
-    for connection in request.scope["ws_connections"]:
-        connection.send_msg("testin")
+    request.scope["background_tasks"].send_all_websockets('{"test": "test"}')
     return HttpResponse("...")
 
 
@@ -47,8 +46,8 @@ def messages_new(request):
         if not msg["seen"]:
             msg_id = make_unused_id(unseen)
             unseen[msg_id] = msg
-            for connection in request.scope["ws_connections"]:
-                connection.send_msg(dumps({"new_messages": {msg_id: msg}}))
+            msg_json = dumps({"new_messages": {msg_id: msg}})
+            request.scope["background_tasks"].send_all_websockets(msg_json)
 
     except (exc.ValidationError, JSONDecodeError) as err:
         return JsonResponse({"error": str(err)})
