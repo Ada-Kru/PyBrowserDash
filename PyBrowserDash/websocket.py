@@ -1,4 +1,5 @@
 from asyncio import Queue, create_task, as_completed, CancelledError
+from json import dumps, loads, JSONDecodeError
 
 
 async def websocket_app(scope, receive, send):
@@ -43,13 +44,13 @@ class ws_connection:
             evt_type = evt["type"]
 
             if evt_type == "websocket.receive":
-                if evt["text"] == "ping":
-                    await self.send({"type": "websocket.send", "text": "pong"})
+                await self._on_recv(evt["text"])
             elif evt_type == "websocket.connect":
                 await self.send(
                     {"type": "websocket.accept", "status_code": 101}
                 )
                 self.connected = True
+                self.send_backend_status()
             elif evt_type == "websocket.disconnect":
                 self.connected = False
                 break
@@ -61,3 +62,19 @@ class ws_connection:
             return True
         else:
             return False
+
+    def send_backend_status(self):
+        """Send backend information to the client."""
+        status = self.scope["background_tasks"].get_status()
+        self.send_msg(dumps({"status": status}))
+
+    async def _on_recv(self, text):
+        try:
+            bg_tasks = self.scope["background_tasks"]
+            msg = loads(text)
+            if "toggle_mute" in msg:
+                bg_tasks.toggle_mute()
+                await self.send_backend_status()
+
+        except JSONDecodeError:
+            print("Error decoding message: ", msg)

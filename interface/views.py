@@ -29,12 +29,12 @@ def messages_new(request):
         raise Http404("Not Found")
 
     try:
+        bg = request.scope["background_tasks"]
         msg = loads(request.body)
         new_msg_validator(msg)
         clean_message(msg)
         if msg["type"] == "log":
             msg["seen"] = True
-        # print(msg)
 
         Message(
             sender=msg["sender"],
@@ -47,7 +47,11 @@ def messages_new(request):
             msg_id = make_unused_id(unseen)
             unseen[msg_id] = msg
             msg_json = dumps({"new_messages": {msg_id: msg}})
-            request.scope["background_tasks"].send_all_websockets(msg_json)
+            bg.send_all_websockets(msg_json)
+
+        if not bg.is_muted():
+            override = msg["speech_override"] is not None
+            bg.speak(msg["text"] if not override else msg["speech_override"])
 
     except (exc.ValidationError, JSONDecodeError) as err:
         return JsonResponse({"error": str(err)})

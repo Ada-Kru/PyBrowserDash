@@ -20,5 +20,8 @@ def clean_message(msg):
     if "data" not in msg:
         msg["data"] = ""
 
+    if "speech_override" not in msg:
+        msg["speech_override"] = None
+
     if "seen" not in msg:
         msg["seen"] = False if msg["type"] not in DEFAULT_SEEN else True

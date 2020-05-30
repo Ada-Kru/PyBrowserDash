@@ -12,10 +12,16 @@ new_msg_validator = Dict(
             nullable=True, parser=parse_datetime, tz=timezone.utc
         ),
         "data": Str(minlen=0, maxlen=5120),
+        "speech_override": Str(nullable=True, minlen=1, maxlen=2048),
         "seen": Bool(),
     },
-    defaults={"type": "default", "time": None, "seen": False, "data": ""},
+    defaults={
+        "type": "default",
+        "time": None,
+        "seen": False,
+        "data": "",
+        "speech_override": None,
+    },
 )
-
 
 seen_messages_validator = List(Str(minlen=1, maxlen=32))
