@@ -1,5 +1,6 @@
 from django.http import HttpResponse, Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.template import loader
 from json import loads, dumps, JSONDecodeError
 from .validation import new_msg_validator, seen_messages_validator
 from validx import exc
@@ -19,8 +20,8 @@ unseen = {}
 
 
 def index(request):
-    request.scope["background_tasks"].send_all_websockets('{"test": "test"}')
-    return HttpResponse("...")
+    template = loader.get_template('interface/index.html')
+    return HttpResponse(template.render())
 
 
 @csrf_exempt
