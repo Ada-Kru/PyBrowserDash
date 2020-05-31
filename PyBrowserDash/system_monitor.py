@@ -1,6 +1,5 @@
 from psutil import net_io_counters, cpu_percent, virtual_memory as virtmem
 from asyncio import sleep
-from json import dumps
 
 
 class SystemMonitor:
@@ -47,6 +46,6 @@ class SystemMonitor:
         """Send system status to clients forever."""
         while True:
             if self.get_computer_status():
-                msg = {"system": self.make_status_text()}
-                self._bg_tasks.send_all_websockets(dumps(msg))
+                msg = {"sys": self.make_status_text()}
+                self._bg_tasks.send_all_websockets(msg)
             await sleep(1)

@@ -1,14 +1,13 @@
 import pyfoobeef
-from json import dumps
 
 
 class foobar2k_event_listener():
     """Listen for events from Foobar2000 and send updates to clients."""
 
-    def __init__(self, ws_connections):
+    def __init__(self, bg_tasks):
         self._listener = None
         self._current_state = None
-        self._ws_connections = ws_connections
+        self._bg_tasks = bg_tasks
 
     def is_started(self):
         """Return if listener is running or not."""
@@ -41,28 +40,27 @@ class foobar2k_event_listener():
 
     def update_client(self, client):
         """Send player state to a single clent."""
-        client.send_msg(self.make_update_str())
+        client.send_msg(self.make_update())
 
     def update_all_clients(self):
         """Send updates to clients."""
-        for connection in self._ws_connections:
-            connection.send_msg(self.make_update_str())
+        self._bg_tasks.send_all_websockets(self.make_update())
 
-    def make_update_str(self):
-        """Make a JSON string for websocket updates."""
+    def make_update(self):
+        """Make a status dictionary for websocket updates."""
         if self._current_state is None:
-            return '{"playback_state": "disconnected"}'
+            return {"music": "disconnected"}
+
         state = self._current_state
-        output = {"playback_state": state.playback_state}
+        output = {"music": state.playback_state}
         if state.active_item.has_columns():
             col = state.active_item.columns
             output["artist"] = col.artist
             output["title"] = col.title
-            output["length"] = col.length
-            output["playback_position"] = state.active_item.position_mmss()
+            output["length"] = state.active_item.duration
+            output["position"] = state.active_item.position
 
-        print(output)
-        return dumps({"music_player": output})
+        return {"music": output}
 
     async def disconnect(self):
         """Disconnect listener."""

@@ -58,15 +58,17 @@ class ws_connection:
     def send_msg(self, msg):
         """Send a message over the websocket."""
         if self.connected:
-            self.q.put_nowait(msg)
+            self.q.put_nowait(dumps(msg))
             return True
         else:
             return False
 
     def send_backend_status(self):
         """Send backend information to the client."""
-        status = self.scope["background_tasks"].get_status()
-        self.send_msg(dumps({"status": status}))
+        bg_tasks = self.scope["background_tasks"]
+        status = bg_tasks.get_backend_status()
+        music_player = bg_tasks.get_music_player_status()
+        self.send_msg({"backend_status": status, **music_player})
 
     async def _on_recv(self, text):
         try:

@@ -1,7 +1,7 @@
 from django.http import HttpResponse, Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
-from json import loads, dumps, JSONDecodeError
+from json import loads, JSONDecodeError
 from .validation import new_msg_validator, seen_messages_validator
 from validx import exc
 from datetime import datetime, timezone
@@ -47,8 +47,7 @@ def messages_new(request):
         if not msg["seen"]:
             msg_id = make_unused_id(unseen)
             unseen[msg_id] = msg
-            msg_json = dumps({"new_messages": {msg_id: msg}})
-            bg.send_all_websockets(msg_json)
+            bg.send_all_websockets({"new_msg": {msg_id: msg}})
 
         if not bg.is_muted():
             override = msg["speech_override"] is not None
@@ -62,12 +61,14 @@ def messages_new(request):
 
 @csrf_exempt
 def messages_unseen(request):
+    bg = request.scope["background_tasks"]
     if request.method == "POST":
         try:
             seen_ids = loads(request.body)
             seen_messages_validator(seen_ids)
             for seen_id in seen_ids:
                 unseen.pop(seen_id, None)
+            bg.send_all_websockets({"seen_msg": seen_ids})
 
         except (exc.ValidationError, JSONDecodeError) as err:
             return JsonResponse({"error": str(err)})
@@ -77,8 +78,10 @@ def messages_unseen(request):
 
 @csrf_exempt
 def messages_clear_unseen(request):
+    bg = request.scope["background_tasks"]
     if request.method == "POST":
         unseen.clear()
+        bg.send_all_websockets({"clear_all_msg": True})
         return JsonResponse({"error": None})
 
 

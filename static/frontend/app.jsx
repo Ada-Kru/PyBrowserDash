@@ -8,15 +8,17 @@ class App extends Component {
         this.ws = null
 
         // Function maps for websocket events and internal events.
-        // this._wsMsgMap = {
-        //     point_update: this.onMsgPointUpdate,
-        //     category_added: this.onAddedBackendCat,
-        //     category_removed: this.onRemovedBackendCat,
-        //     removed_points: this.onBackendRemovedPoints,
-        // }
+        this._wsMsgMap = {
+            sys: this._onSystemInfoUpdate,
+            backend: this._onBackendUpdate,
+            music: this._onMusicPlayerUpdate,
+            new_msg: this._onNewMessages,
+            seen_msg: this._onSeenMessages,
+            clear_all_msg: this._onClearAllMessages,
+        }
     }
 
-    setupWebsocket = () => {
+    _setupWebsocket = () => {
         this.ws = new WebSocket(
             `ws://${window.location.hostname}:${window.location.port}/`
         )
@@ -29,16 +31,16 @@ class App extends Component {
         this.ws.onmessage = evt => {
             let msg = JSON.parse(evt.data)
             console.log(msg)
-            // for (let [type, data] of Object.entries(msg)) {
-            //     if (this._wsMsgMap.hasOwnProperty(type)) {
-            //         this._wsMsgMap[type](data)
-            //     }
-            // }
+            for (let [type, data] of Object.entries(msg)) {
+                if (this._wsMsgMap.hasOwnProperty(type)) {
+                    this._wsMsgMap[type](data)
+                }
+            }
         }
 
         this.ws.onclose = (evt) => {
             this.setState({ wsState: "disconnected" })
-            setTimeout(() => this.setupWebsocket(), 1000)
+            setTimeout(() => this._setupWebsocket(), 1000)
         }
 
         this.ws.error = evt => {
@@ -50,8 +52,32 @@ class App extends Component {
         this.ws.send(JSON.stringify(data))
     }
 
+    _onSystemInfoUpdate = update => {
+        console.log(update)
+    }
+
+    _onBackendUpdate = update => {
+        console.log(update)
+    }
+
+    _onMusicPlayerUpdate = update => {
+        console.log(update)
+    }
+
+    _onNewMessages = update => {
+        console.log(update)
+    }
+
+    _onSeenMessages = update => {
+        console.log(update)
+    }
+
+    _onClearAllMessages = update => {
+        console.log(update)
+    }
+
     componentDidMount() {
-        this.setupWebsocket()
+        this._setupWebsocket()
     }
 
     render() {

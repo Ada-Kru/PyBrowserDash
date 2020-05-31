@@ -9,8 +9,8 @@ class BackgroundTasks():
 
     def __init__(self):
         self.ws_connections = set()
-        ael = foobar2k_event_listener(self.ws_connections)
-        self._audio_event_listener = ael
+        ael = foobar2k_event_listener(self)
+        self._music_event_listener = ael
         self._system_monitor = SystemMonitor(self)
         self._tasks_started = False
         self._text_speaker = TextSpeaker()
@@ -23,7 +23,7 @@ class BackgroundTasks():
     async def start_tasks(self):
         """Start background tasks."""
         self._tasks_started = True
-        await self._audio_event_listener.listen()
+        await self._music_event_listener.listen()
         create_task(self._system_monitor.run())
 
     def send_all_websockets(self, data):
@@ -43,6 +43,10 @@ class BackgroundTasks():
         """Return if audio is muted."""
         return self._muted
 
-    def get_status(self):
+    def get_backend_status(self):
         """Get a dictionary with the backend's status."""
         return {"muted": self._muted}
+
+    def get_music_player_status(self):
+        """Get a dictionary with the audio player's status."""
+        return self._music_event_listener.make_update()
