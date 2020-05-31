@@ -1,7 +1,7 @@
 import pyfoobeef
 
 
-class foobar2k_event_listener():
+class foobar2k_event_listener:
     """Listen for events from Foobar2000 and send updates to clients."""
 
     def __init__(self, bg_tasks):
@@ -49,18 +49,25 @@ class foobar2k_event_listener():
     def make_update(self):
         """Make a status dictionary for websocket updates."""
         if self._current_state is None:
-            return {"music": "disconnected"}
+            return {
+                "music": {"player_state": "disconnected", "active_item": {}}
+            }
 
         state = self._current_state
-        output = {"music": state.playback_state}
+        active_info = {}
         if state.active_item.has_columns():
             col = state.active_item.columns
-            output["artist"] = col.artist
-            output["title"] = col.title
-            output["length"] = state.active_item.duration
-            output["position"] = state.active_item.position
+            active_info["artist"] = col.artist
+            active_info["title"] = col.title
+            active_info["length"] = state.active_item.duration
+            active_info["position"] = state.estimated_position()
 
-        return {"music": output}
+        return {
+            "music": {
+                "player_state": state.playback_state,
+                "active_item": active_info,
+            }
+        }
 
     async def disconnect(self):
         """Disconnect listener."""

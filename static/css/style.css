@@ -1,0 +1,142 @@
+html, body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  scrollbar-color: #444 #222;
+  text-shadow: 1px 1px #000; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: #111;
+  color: #ffffff; }
+
+::selection {
+  color: #fff;
+  background-color: #808f80; }
+
+#mainInterface {
+  width: 65%;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  background-color: #111;
+  border-right: 1px solid #222; }
+
+span.spacer {
+  padding: 0px 10px; }
+
+span.expandElement {
+  color: #DDD;
+  cursor: pointer;
+  text-shadow: 1px 1px 0px #555;
+  padding-right: 5px; }
+
+#modules {
+  background-color: #444; }
+
+#moduleButtons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between; }
+
+button.mainWinButton, button.toggleButton {
+  color: #FFFFFF;
+  background-color: #444;
+  white-space: nowrap;
+  border-top: 1px solid #666;
+  border-left: 1px solid #666;
+  border-bottom: 1px solid #111;
+  border-right: 1px solid #111;
+  height: 26px;
+  margin: 1px 2px;
+  flex-basis: 75px; }
+
+button.mainWinButton:hover, button.toggleButton:hover {
+  color: #55FF55; }
+
+button.toggleButton.activated {
+  color: #FFFF00; }
+
+button.toggleButton.red {
+  background-color: #FF0000; }
+
+#messagesButton {
+  flex-grow: 2; }
+
+#musicBar {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  font-family: monospace;
+  max-height: 26px;
+  padding-top: 2px;
+  padding-bottom: 1px;
+  font-size: 13px; }
+
+span.musicTimes {
+  padding: 3px 2px;
+  margin-left: 2px;
+  margin-right: 2px; }
+
+#musicProgressBar {
+  background-color: #222;
+  height: 19px;
+  border-top: 1px solid #111;
+  border-left: 1px solid #111;
+  border-bottom: 1px solid #666;
+  border-right: 1px solid #666;
+  flex-grow: 2; }
+
+#musicProgressBar::-moz-progress-bar {
+  animation: none;
+  background-color: #808F80;
+  border-top: 1px solid #AAA;
+  border-left: 1px solid #AAA;
+  border-bottom: 1px solid #444;
+  border-right: 1px solid #444; }
+
+#musicProgressBar[value="0"]::-moz-progress-bar {
+  border: none; }
+
+#musicTitle {
+  position: absolute;
+  font-family: Lucida Console;
+  font-size: 12px;
+  white-space: nowrap;
+  background-color: #333C;
+  padding: 0px 3px;
+  border-top: 1px solid #AAA;
+  border-left: 1px solid #AAA;
+  border-bottom: 1px solid #444;
+  border-right: 1px solid #444;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%); }
+
+#statusBar {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  border-top: 1px solid #AAA;
+  border-left: 1px solid #AAA;
+  border-right: 1px solid #333; }
+
+#statusText {
+  font-size: 12px;
+  padding-top: 2px;
+  padding-left: 3px; }
+
+#statusStats {
+  white-space: pre-wrap;
+  font-family: monospace;
+  padding: 0px 4px;
+  border-top: 1px solid #333;
+  border-left: 1px solid #333;
+  border-bottom: 1px solid #AAA;
+  border-right: 1px solid #AAA; }
