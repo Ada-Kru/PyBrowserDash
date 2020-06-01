@@ -19,7 +19,6 @@ except ImportError:
 
 
 MAX_REPEAT_DELAY = 300
-unseen, no_repeat = {}, {}
 
 
 def index(request):
@@ -46,8 +45,8 @@ def messages_new(request):
             data=msg["data"],
         ).save()
         if not msg["seen"]:
-            msg_id = make_unused_id(unseen)
-            unseen[msg_id] = msg
+            msg_id = make_unused_id(bg.unseen)
+            bg.unseen[msg_id] = msg
             bg.send_all_websockets({"new_msg": {msg_id: msg}})
 
         speak_msg(msg, bg)
@@ -58,24 +57,25 @@ def messages_new(request):
     return JsonResponse({"error": None}, status=201)
 
 
-def speak_msg(msg, bg):
+def speak_msg(msg, bg_tasks):
+    bg = bg_tasks
     do_speak = True
     if msg["alert_type"] == DELAYED_REPEAT_MESSAGE:
         now, key = time(), msg["sender"]
-        if key in no_repeat and now - no_repeat[key] <= MAX_REPEAT_DELAY:
+        if key in bg.no_repeat and now - bg.no_repeat[key] <= MAX_REPEAT_DELAY:
             do_speak = False
         else:
-            no_repeat[key] = now
+            bg.no_repeat[key] = now
 
     if do_speak and not bg.is_muted():
         override = msg["speech_override"] is not None
         bg.speak(msg["text"] if not override else msg["speech_override"])
 
-    if len(no_repeat) >= 10:
-        keys, now = list(no_repeat.keys), time()
+    if len(bg.no_repeat) >= 10:
+        keys, now = list(bg.no_repeat.keys), time()
         for key in keys:
-            if now - no_repeat[key] >= MAX_REPEAT_DELAY:
-                no_repeat.pop(key)
+            if now - bg.no_repeat[key] >= MAX_REPEAT_DELAY:
+                bg.no_repeat.pop(key)
 
 
 @csrf_exempt
@@ -86,21 +86,21 @@ def messages_unseen(request):
             seen_ids = loads(request.body)
             seen_messages_validator(seen_ids)
             for seen_id in seen_ids:
-                unseen.pop(seen_id, None)
-            bg.send_all_websockets({"seen_msg": seen_ids})
+                bg.unseen.pop(seen_id, None)
+            bg.send_all_websockets({"seen": seen_ids})
 
         except (exc.ValidationError, JSONDecodeError) as err:
             return JsonResponse({"error": str(err)})
 
-    return JsonResponse({"error": None, "messages": unseen})
+    return JsonResponse({"error": None, "messages": bg.unseen})
 
 
 @csrf_exempt
 def messages_clear_unseen(request):
     bg = request.scope["background_tasks"]
     if request.method == "POST":
-        unseen.clear()
-        bg.send_all_websockets({"clear_all_msg": True})
+        bg.unseen.clear()
+        bg.send_all_websockets({"unseen": {}})
         return JsonResponse({"error": None})
 
 

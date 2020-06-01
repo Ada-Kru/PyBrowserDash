@@ -7,7 +7,7 @@ urlpatterns = [
     path("messages/new/", views.messages_new, name="messages_new"),
     path("messages/unseen/", views.messages_unseen, name="messages_unseen"),
     path(
-        "messages/clear_unseen/",
+        "messages/unseen/clear/",
         views.messages_clear_unseen,
         name="messages_clear_unseen",
     ),

@@ -65,10 +65,10 @@ class ws_connection:
 
     def send_initial_status(self):
         """Send backend information to the client."""
-        bg_tasks = self.scope["background_tasks"]
-        status = bg_tasks.get_backend_status()
-        music_player = bg_tasks.get_music_player_status()
-        self.send_msg({"backend": status, **music_player})
+        bg = self.scope["background_tasks"]
+        status = bg.get_backend_status()
+        music = bg.get_music_player_status()
+        self.send_msg({"backend": status, "unseen": bg.unseen, **music})
 
     def send_backend_status(self):
         """Send backend information to the client."""

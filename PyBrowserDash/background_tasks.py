@@ -15,6 +15,8 @@ class BackgroundTasks():
         self._tasks_started = False
         self._text_speaker = TextSpeaker()
         self._muted = False
+        self.unseen = {}
+        self.no_repeat = {}
 
     def tasks_started(self):
         """Return if tasks have been started."""

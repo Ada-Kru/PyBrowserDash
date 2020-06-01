@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import StatusBar from "./components/StatusBar"
 import MusicBar from "./components/MusicBar"
 import ControlBar from "./components/ControlBar"
+import MessageList from "./components/MessageList"
 
 const WS_DISCONNECTED = 0
 const WS_CONNECTING = 1
@@ -24,6 +25,8 @@ class App extends Component {
             musicInfo: {},
             updatedMusic: false,
             backendMuted: false,
+            unseenMessages: {},
+            updatedUnseen: false,
         }
         this.ws = null
         this.musicActive = false
@@ -34,8 +37,8 @@ class App extends Component {
             backend: this._onBackendUpdate,
             music: this._onMusicPlayerUpdate,
             new_msg: this._onNewMessages,
-            seen_msg: this._onSeenMessages,
-            clear_all_msg: this._onClearAllMessages,
+            seen: this._onSeenMessages,
+            unseen: this._onUnseenMessages,
         }
     }
 
@@ -104,15 +107,26 @@ class App extends Component {
     }
 
     _onNewMessages = (update) => {
-        console.log(update)
+        let state = this.state
+        Object.assign(state.unseenMessages, update)
+        this.setState({ updatedUnseen: !state.updatedUnseen })
     }
 
     _onSeenMessages = (update) => {
-        console.log(update)
+        let state = this.state
+        for (let seen of update) {
+            if (state.unseenMessages.hasOwnProperty(seen)) {
+                delete state.unseenMessages[seen]
+            }
+        }
+        this.setState({ updatedUnseen: !state.updatedUnseen })
     }
 
-    _onClearAllMessages = (update) => {
-        console.log(update)
+    _onUnseenMessages = (update) => {
+        this.setState({
+            unseenMessages: update,
+            updatedUnseen: !this.state.updatedUnseen,
+        })
     }
 
     _toggleMute = () => {
@@ -138,6 +152,12 @@ class App extends Component {
         return (
             <div id="mainInterface">
                 <div id="modules">
+                    {Object.keys(state.unseenMessages).length ? (
+                        <MessageList
+                            unseenMessages={state.unseenMessages}
+                            updatedUnseen={state.updatedUnseen}
+                        ></MessageList>
+                    ) : null}
                     {this.musicActive ? (
                         <MusicBar
                             updatedMusic={state.updatedMusic}
