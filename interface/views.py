@@ -5,8 +5,10 @@ from json import loads, JSONDecodeError
 from .validation import new_msg_validator, seen_messages_validator
 from validx import exc
 from datetime import datetime, timezone
+from time import time
 from subprocess import call as sp_call
 from .clean_message import clean_message
+from .message_types import DELAYED_REPEAT_MESSAGE
 from .models import Message
 from .funcs import make_unused_id
 
@@ -16,11 +18,12 @@ except ImportError:
     from PyBrowserDash.config import WOL_COMMAND
 
 
-unseen = {}
+MAX_REPEAT_DELAY = 300
+unseen, no_repeat = {}, {}
 
 
 def index(request):
-    template = loader.get_template('interface/index.html')
+    template = loader.get_template("interface/index.html")
     return HttpResponse(template.render())
 
 
@@ -34,8 +37,6 @@ def messages_new(request):
         msg = loads(request.body)
         new_msg_validator(msg)
         clean_message(msg)
-        if msg["type"] == "log":
-            msg["seen"] = True
 
         Message(
             sender=msg["sender"],
@@ -49,14 +50,32 @@ def messages_new(request):
             unseen[msg_id] = msg
             bg.send_all_websockets({"new_msg": {msg_id: msg}})
 
-        if not bg.is_muted():
-            override = msg["speech_override"] is not None
-            bg.speak(msg["text"] if not override else msg["speech_override"])
+        speak_msg(msg, bg)
 
     except (exc.ValidationError, JSONDecodeError) as err:
         return JsonResponse({"error": str(err)})
 
     return JsonResponse({"error": None}, status=201)
+
+
+def speak_msg(msg, bg):
+    do_speak = True
+    if msg["alert_type"] == DELAYED_REPEAT_MESSAGE:
+        now, key = time(), msg["sender"]
+        if key in no_repeat and now - no_repeat[key] <= MAX_REPEAT_DELAY:
+            do_speak = False
+        else:
+            no_repeat[key] = now
+
+    if do_speak and not bg.is_muted():
+        override = msg["speech_override"] is not None
+        bg.speak(msg["text"] if not override else msg["speech_override"])
+
+    if len(no_repeat) >= 10:
+        keys, now = list(no_repeat.keys), time()
+        for key in keys:
+            if now - no_repeat[key] >= MAX_REPEAT_DELAY:
+                no_repeat.pop(key)
 
 
 @csrf_exempt

@@ -11,5 +11,3 @@ DEFAULT_SEEN = set(
     for key, val in ALL_MSG_TYPES.items()
     if val["alert_type"] == LOG_ONLY_MESSAGE
 )
-
-WOL_COMMAND = ""
