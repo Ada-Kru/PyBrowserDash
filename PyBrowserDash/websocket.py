@@ -50,7 +50,7 @@ class ws_connection:
                     {"type": "websocket.accept", "status_code": 101}
                 )
                 self.connected = True
-                self.send_backend_status()
+                self.send_initial_status()
             elif evt_type == "websocket.disconnect":
                 self.connected = False
                 break

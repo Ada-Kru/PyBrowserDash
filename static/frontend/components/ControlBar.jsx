@@ -16,15 +16,16 @@ class ControlBar extends Component {
         }
     }
 
+    // <button id="logButton" className="controlButton">
+    //     Log
+    // </button>
+
     render() {
         let state = this.state
         return (
             <div id="controlBar">
-                <button id="logButton" className="controlButton">
-                    Log
-                </button>
                 <button id="messagesButton" className="controlButton">
-                    Messages
+                    Close Messages
                 </button>
                 <span className="spacer"></span>
                 <button

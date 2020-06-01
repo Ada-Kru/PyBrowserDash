@@ -60,7 +60,7 @@ class App extends Component {
 
         this.ws.onmessage = (evt) => {
             let msg = JSON.parse(evt.data)
-            // console.log(msg);
+            // console.log(msg)
             for (let [type, data] of Object.entries(msg)) {
                 if (this._wsMsgMap.hasOwnProperty(type)) {
                     this._wsMsgMap[type](data)

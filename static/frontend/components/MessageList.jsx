@@ -20,9 +20,33 @@ class MessageList extends Component {
 
     render() {
         let state = this.state
+        let msgs = state.unseenMessages
         return (
-            <div id="MessageList">
-                messages go here
+            <div id="messageList">
+                <table id="msgTable">
+                    <thead id="msgTableHeaders">
+                        <tr className="msgHeaderRow">
+                            <th className="msgHeader timeCol">Time</th>
+                            <th className="msgHeader senderCol">Sender</th>
+                            <th className="msgHeader msgCol">Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="msgTableBody">
+                        {Object.keys(msgs).map((key) => {
+                            let m = msgs[key]
+                            return (
+                                <tr
+                                    key={key}
+                                    className={`msgRow ${m.class_name}`}
+                                >
+                                    <td className="timeCol">{m.time}</td>
+                                    <td className="senderCol">{m.sender}</td>
+                                    <td className="msgCol">{m.text}</td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
             </div>
         )
     }

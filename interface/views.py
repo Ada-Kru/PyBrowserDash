@@ -9,6 +9,7 @@ from time import time
 from subprocess import call as sp_call
 from .clean_message import clean_message
 from .message_types import DELAYED_REPEAT_MESSAGE
+from .all_message_types import ALL_MSG_TYPES
 from .models import Message
 from .funcs import make_unused_id
 
@@ -108,15 +109,15 @@ def messages_history(request, limit):
     db_messages = Message.objects.order_by("time")[:limit]
     messages = []
     for db_msg in db_messages:
-        messages.append(
-            {
-                "sender": db_msg.sender,
-                "text": db_msg.text,
-                "type": db_msg.type,
-                "time": db_msg.time,
-                "data": db_msg.data,
-            }
-        )
+        msg = {
+            "sender": db_msg.sender,
+            "text": db_msg.text,
+            "type": db_msg.type,
+            "time": db_msg.time,
+            "data": db_msg.data,
+        }
+        msg.update(ALL_MSG_TYPES[msg[db_msg.type]])
+        messages.append(msg)
     return JsonResponse({"error": None, "messages": messages})
 
 
