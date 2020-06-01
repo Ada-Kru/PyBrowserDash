@@ -1,6 +1,6 @@
-import React, { Component } from "react"
+import React, { PureComponent } from "react"
 
-class MusicBar extends Component {
+class MusicBar extends PureComponent {
     constructor(props) {
         super(props)
         let info = this.props.musicInfo

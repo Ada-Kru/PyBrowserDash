@@ -1,9 +1,9 @@
-import React, { Component } from "react"
+import React, { PureComponent } from "react"
 import moment from "moment"
 
 const DATE_FORMAT = "HH:mm:ss / MM-DD-YYYY"
 
-class MessageList extends Component {
+class MessageList extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {

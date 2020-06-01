@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { PureComponent } from "react"
 import StatusBar from "./components/StatusBar"
 import MusicBar from "./components/MusicBar"
 import ControlBar from "./components/ControlBar"
@@ -10,7 +10,7 @@ const WS_CONNECTED = 2
 const STATUS_NORMAL_STYLE = { color: "white" }
 const STATUS_ERROR_STYLE = { color: "red" }
 
-class App extends Component {
+class App extends PureComponent {
     constructor(props) {
         super(props)
 
