@@ -43,14 +43,15 @@ span.expandElement {
     background-color: #444;
 }
 
-#moduleButtons {
+#controlBar {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
+    border-top: 1px solid #555;
 }
 
-button.mainWinButton, button.toggleButton {
+button.controlButton, button.toggleButton {
     color: #FFFFFF;
     background-color: #444;
     white-space: nowrap;
@@ -59,16 +60,17 @@ button.mainWinButton, button.toggleButton {
     border-bottom: 1px solid #111;
     border-right: 1px solid #111;
     height: 26px;
-    margin: 1px 2px;
+    margin: 2px 2px 3px 2px;
     flex-basis: 75px;
 }
 
-button.mainWinButton:hover, button.toggleButton:hover {
+button.controlButton:hover, button.toggleButton:hover {
     color: #55FF55;
 }
 
 button.toggleButton.activated {
     color: #FFFF00;
+    font-weight: bold;
 }
 
 button.toggleButton.red {

@@ -63,12 +63,17 @@ class ws_connection:
         else:
             return False
 
-    def send_backend_status(self):
+    def send_initial_status(self):
         """Send backend information to the client."""
         bg_tasks = self.scope["background_tasks"]
         status = bg_tasks.get_backend_status()
         music_player = bg_tasks.get_music_player_status()
-        self.send_msg({"backend_status": status, **music_player})
+        self.send_msg({"backend": status, **music_player})
+
+    def send_backend_status(self):
+        """Send backend information to the client."""
+        bg_tasks = self.scope["background_tasks"]
+        self.send_msg({"backend": bg_tasks.get_backend_status()})
 
     async def _on_recv(self, text):
         try:
@@ -76,7 +81,7 @@ class ws_connection:
             msg = loads(text)
             if "toggle_mute" in msg:
                 bg_tasks.toggle_mute()
-                await self.send_backend_status()
+                self.send_backend_status()
 
         except JSONDecodeError:
             print("Error decoding message: ", msg)

@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import StatusBar from "./components/StatusBar"
 import MusicBar from "./components/MusicBar"
+import ControlBar from "./components/ControlBar"
 
 const WS_DISCONNECTED = 0
 const WS_CONNECTING = 1
@@ -22,6 +23,7 @@ class App extends Component {
             musicStatus: "disconnected",
             musicInfo: {},
             updatedMusic: false,
+            backendMuted: false,
         }
         this.ws = null
         this.musicActive = false
@@ -88,7 +90,7 @@ class App extends Component {
     }
 
     _onBackendUpdate = (update) => {
-        console.log(update)
+        this.setState({ backendMuted: update.muted })
     }
 
     _onMusicPlayerUpdate = (update) => {
@@ -113,6 +115,12 @@ class App extends Component {
         console.log(update)
     }
 
+    _toggleMute = () => {
+        if ((this.state.wsState = WS_CONNECTED)) {
+            this.ws.send(JSON.stringify({ toggle_mute: true }))
+        }
+    }
+
     componentDidMount = () => {
         this._setupWebsocket()
     }
@@ -124,8 +132,6 @@ class App extends Component {
             statusStyle: style == null ? STATUS_NORMAL_STYLE : style,
         })
     }
-
-    _renderMusicBar = () => {}
 
     render() {
         let state = this.state
@@ -139,6 +145,10 @@ class App extends Component {
                             musicInfo={state.musicInfo}
                         ></MusicBar>
                     ) : null}
+                    <ControlBar
+                        backendMuted={state.backendMuted}
+                        toggleMute={this._toggleMute}
+                    ></ControlBar>
                     <StatusBar
                         updatedStatusText={state.updatedStatusText}
                         updatedStatsOnly={state.updatedStatsOnly}
