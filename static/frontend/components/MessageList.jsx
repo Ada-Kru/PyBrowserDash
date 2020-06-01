@@ -1,10 +1,13 @@
 import React, { Component } from "react"
+import moment from "moment"
+
+const DATE_FORMAT = "HH:mm:ss / MM-DD-YYYY"
 
 class MessageList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            unseenMessages: this.props.unseenMessages,
+            messages: this.props.messages,
             updatedUnseen: this.props.updatedUnseen,
         }
     }
@@ -12,7 +15,7 @@ class MessageList extends Component {
     componentDidUpdate = (prevProps) => {
         if (prevProps.updatedUnseen != this.props.updatedUnseen) {
             this.setState({
-                unseenMessages: this.props.unseenMessages,
+                messages: this.props.messages,
                 updatedUnseen: this.props.updatedUnseen,
             })
         }
@@ -20,12 +23,13 @@ class MessageList extends Component {
 
     render() {
         let state = this.state
-        let msgs = state.unseenMessages
+        let msgs = state.messages
         return (
             <div id="messageList">
                 <table id="msgTable">
                     <thead id="msgTableHeaders">
                         <tr className="msgHeaderRow">
+                            <th className="msgHeader seenCol">New</th>
                             <th className="msgHeader timeCol">Time</th>
                             <th className="msgHeader senderCol">Sender</th>
                             <th className="msgHeader msgCol">Message</th>
@@ -34,13 +38,18 @@ class MessageList extends Component {
                     <tbody id="msgTableBody">
                         {Object.keys(msgs).map((key) => {
                             let m = msgs[key]
+                            let seen = m.hasOwnProperty("seen") ? m.seen : true
+                            let datetime = moment(m.time).format(DATE_FORMAT)
+                            let rowClass = `msgRow ${m.class_name}`
                             return (
-                                <tr
-                                    key={key}
-                                    className={`msgRow ${m.class_name}`}
-                                >
-                                    <td className="timeCol">{m.time}</td>
-                                    <td className="senderCol">{m.sender}</td>
+                                <tr key={key} className={rowClass}>
+                                    <td className="seenCol">
+                                        {seen ? "" : "✔️"}
+                                    </td>
+                                    <td className="timeCol">{datetime}</td>
+                                    <td className="senderCol" title={m.sender}>
+                                        {m.sender}
+                                    </td>
                                     <td className="msgCol">{m.text}</td>
                                 </tr>
                             )

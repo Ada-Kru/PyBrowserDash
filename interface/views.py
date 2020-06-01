@@ -1,4 +1,9 @@
-from django.http import HttpResponse, Http404, JsonResponse
+from django.http import (
+    HttpResponse,
+    Http404,
+    HttpResponseBadRequest,
+    JsonResponse,
+)
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from json import loads, JSONDecodeError
@@ -103,11 +108,15 @@ def messages_clear_unseen(request):
         bg.unseen.clear()
         bg.send_all_websockets({"unseen": {}})
         return JsonResponse({"error": None})
+    else:
+        return HttpResponseBadRequest(
+            "Only POST requests are allowed on this endpoint."
+        )
 
 
 def messages_history(request, limit):
     db_messages = Message.objects.order_by("time")[:limit]
-    messages = []
+    messages, counter = {}, 0
     for db_msg in db_messages:
         msg = {
             "sender": db_msg.sender,
@@ -116,8 +125,9 @@ def messages_history(request, limit):
             "time": db_msg.time,
             "data": db_msg.data,
         }
-        msg.update(ALL_MSG_TYPES[msg[db_msg.type]])
-        messages.append(msg)
+        msg.update(ALL_MSG_TYPES[db_msg.type])
+        messages[counter] = msg
+        counter += 1
     return JsonResponse({"error": None, "messages": messages})
 
 

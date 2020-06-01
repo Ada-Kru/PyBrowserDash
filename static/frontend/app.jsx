@@ -26,10 +26,13 @@ class App extends Component {
             updatedMusic: false,
             backendMuted: false,
             unseenMessages: {},
+            messageHistory: {},
             updatedUnseen: false,
         }
         this.ws = null
         this.musicActive = false
+        this.numUnseen = 0
+        this.numHistory = 0
 
         // Function maps for websocket events and internal events.
         this._wsMsgMap = {
@@ -109,7 +112,12 @@ class App extends Component {
     _onNewMessages = (update) => {
         let state = this.state
         Object.assign(state.unseenMessages, update)
-        this.setState({ updatedUnseen: !state.updatedUnseen })
+        this.numUnseen = Object.keys(state.unseenMessages).length
+        this.numHistory = 0
+        this.setState({
+            updatedUnseen: !state.updatedUnseen,
+            messageHistory: {},
+        })
     }
 
     _onSeenMessages = (update) => {
@@ -119,19 +127,46 @@ class App extends Component {
                 delete state.unseenMessages[seen]
             }
         }
+        this.numUnseen = Object.keys(state.unseenMessages).length
         this.setState({ updatedUnseen: !state.updatedUnseen })
     }
 
     _onUnseenMessages = (update) => {
+        this.numUnseen = Object.keys(update).length
+        this.numHistory = 0
         this.setState({
             unseenMessages: update,
             updatedUnseen: !this.state.updatedUnseen,
+            messageHistory: {},
         })
     }
 
     _toggleMute = () => {
         if ((this.state.wsState = WS_CONNECTED)) {
             this.ws.send(JSON.stringify({ toggle_mute: true }))
+        }
+    }
+
+    _messageButtonClick = () => {
+        let state = this.state
+        if (this.numHistory) {
+            this.numHistory = 0
+            this.setState({ messageHistory: {} })
+        } else if (this.numUnseen) {
+            fetch("messages/unseen/clear/", { method: "POST" })
+        } else {
+            fetch("messages/history/100/")
+                .then((response) => response.text())
+                .then(
+                    (data) => {
+                        data = JSON.parse(data)
+                        this.numHistory = Object.keys(data.messages).length
+                        this.setState({ messageHistory: data.messages })
+                    },
+                    (err) => {
+                        console.log(err)
+                    }
+                )
         }
     }
 
@@ -149,12 +184,13 @@ class App extends Component {
 
     render() {
         let state = this.state
+        let msgs = this.numUnseen ? state.unseenMessages : state.messageHistory
         return (
             <div id="mainInterface">
                 <div id="modules">
-                    {Object.keys(state.unseenMessages).length ? (
+                    {this.numUnseen || this.numHistory ? (
                         <MessageList
-                            unseenMessages={state.unseenMessages}
+                            messages={msgs}
                             updatedUnseen={state.updatedUnseen}
                         ></MessageList>
                     ) : null}
@@ -167,7 +203,9 @@ class App extends Component {
                     ) : null}
                     <ControlBar
                         backendMuted={state.backendMuted}
+                        displayed={this.numUnseen || this.numHistory}
                         toggleMute={this._toggleMute}
+                        messageButtonClick={this._messageButtonClick}
                     ></ControlBar>
                     <StatusBar
                         updatedStatusText={state.updatedStatusText}

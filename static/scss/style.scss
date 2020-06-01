@@ -171,7 +171,8 @@ span.musicTimes {
 
 #msgTable {
     width: 100%;
-    background-color: #333;
+    background-color: #222;
+    border-spacing: 0px 0px;
 }
 
 .msgHeaderRow {
@@ -180,7 +181,11 @@ span.musicTimes {
 }
 
 .msgHeader {
-    background-color: #222;
+    background-color: #333;
+    border-top: 1px solid #666;
+    border-left: 1px solid #666;
+    border-bottom: 1px solid #111;
+    border-right: 1px solid #111;
 }
 
 .msgRow {
@@ -192,16 +197,26 @@ span.musicTimes {
     background-color: #282828;
 }
 
+.seenCol {
+    width: 5%;
+    text-align: center;
+    word-wrap: break-word;
+    border-right: 1px solid #222;
+}
+
 .timeCol {
     width: 20%;
+    word-wrap: break-word;
 }
 
 .senderCol {
-    width: 20%;
+    width: 15%;
+    word-wrap: break-word;
 }
 
 .msgCol {
     width: 60%;
+    word-wrap: break-word;
 }
 
 #msgTableBody {
@@ -209,4 +224,20 @@ span.musicTimes {
     max-height: 50vh;
     width: 100%;
     overflow-y: auto;
+}
+
+.normalMessage {
+    color: yellow;
+}
+
+.logOnlyMessage {
+    color: grey;
+}
+
+.delayedRepeatMessage {
+    color: white;
+}
+
+.normalMessage {
+    color: pink;
 }
