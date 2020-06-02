@@ -17,6 +17,10 @@ def clean_message(msg):
     msg.update(ALL_MSG_TYPES[msg["type"]])
     if msg["alert_type"] == MESSAGE_TYPES["log_only"]:
         msg["seen"] = True
+        msg["tts"] = False
+
+    if "tts" not in msg:
+        msg["tts"] = True
 
     if "time" not in msg or msg["time"] is None:
         now = datetime.utcnow()

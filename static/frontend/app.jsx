@@ -188,12 +188,6 @@ class App extends PureComponent {
         return (
             <div id="mainInterface">
                 <div id="modules">
-                    {this.numUnseen || this.numHistory ? (
-                        <MessageList
-                            messages={msgs}
-                            updatedUnseen={state.updatedUnseen}
-                        ></MessageList>
-                    ) : null}
                     {this.musicActive ? (
                         <MusicBar
                             updatedMusic={state.updatedMusic}
@@ -207,6 +201,12 @@ class App extends PureComponent {
                         toggleMute={this._toggleMute}
                         messageButtonClick={this._messageButtonClick}
                     ></ControlBar>
+                    {this.numUnseen || this.numHistory ? (
+                        <MessageList
+                            messages={msgs}
+                            updatedUnseen={state.updatedUnseen}
+                        ></MessageList>
+                    ) : null}
                     <StatusBar
                         updatedStatusText={state.updatedStatusText}
                         updatedStatsOnly={state.updatedStatsOnly}

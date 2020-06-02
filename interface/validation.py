@@ -11,6 +11,7 @@ new_msg_validator = Dict(
         "time": Datetime(
             nullable=True, parser=parse_datetime, tz=timezone.utc
         ),
+        "tts": Bool(),
         "data": Str(minlen=0, maxlen=5120),
         "speech_override": Str(nullable=True, minlen=1, maxlen=2048),
         "seen": Bool(),
@@ -18,6 +19,7 @@ new_msg_validator = Dict(
     defaults={
         "type": "default",
         "time": None,
+        "tts": True,
         "seen": False,
         "data": "",
         "speech_override": None,

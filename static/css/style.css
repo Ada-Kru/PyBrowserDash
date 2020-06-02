@@ -201,5 +201,8 @@ span.musicTimes {
 .delayedRepeatMessage {
   color: white; }
 
-.unknownMessage {
+.sensitiveMessage {
+  color: orange; }
+
+.unknownTypeMessage {
   color: pink; }

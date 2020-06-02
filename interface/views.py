@@ -1,9 +1,4 @@
-from django.http import (
-    HttpResponse,
-    Http404,
-    HttpResponseBadRequest,
-    JsonResponse,
-)
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from json import loads, JSONDecodeError
@@ -60,7 +55,8 @@ def messages_new(request):
             bg.unseen[msg_id] = msg
             bg.send_all_websockets({"new_msg": {msg_id: msg}})
 
-        speak_msg(msg, bg)
+        if msg["tts"]:
+            speak_msg(msg, bg)
 
     except (exc.ValidationError, JSONDecodeError) as err:
         return JsonResponse({"error": str(err)})
