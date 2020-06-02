@@ -15,4 +15,7 @@ custom_message_types = {
     }
 }
 
+# Console command to run for wake on LAN
 WOL_COMMAND = r""
+# If true use add /static/css/custom.css to the index html
+USE_CUSTOM_STYLES = False

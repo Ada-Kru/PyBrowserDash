@@ -12,30 +12,35 @@ from validx import exc
 from datetime import datetime, timezone
 from time import time
 from subprocess import call as sp_call
+from ipaddress import ip_address
 from .clean_message import clean_message
 from .message_types import DELAYED_REPEAT_MESSAGE
 from .all_message_types import ALL_MSG_TYPES
 from .models import Message
-from .funcs import make_unused_id
+from .funcs import make_unused_id, get_client_ip
 
 try:
-    from PyBrowserDash.local_config import WOL_COMMAND
+    from PyBrowserDash.local_config import WOL_COMMAND, USE_CUSTOM_STYLES
 except ImportError:
-    from PyBrowserDash.config import WOL_COMMAND
+    from PyBrowserDash.config import WOL_COMMAND, USE_CUSTOM_STYLES
 
 
 MAX_REPEAT_DELAY = 300
 
 
 def index(request):
+    if ip_address(get_client_ip(request)).is_global:
+        return HttpResponseBadRequest("")
+
     template = loader.get_template("interface/index.html")
-    return HttpResponse(template.render())
+    context = {"use_custom_styles": USE_CUSTOM_STYLES}
+    return HttpResponse(template.render(context, request))
 
 
 @csrf_exempt
 def messages_new(request):
     if request.method != "POST":
-        raise Http404("Not Found")
+        raise HttpResponseBadRequest("GET not allowed.")
 
     try:
         bg = request.scope["background_tasks"]

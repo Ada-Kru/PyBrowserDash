@@ -5,6 +5,9 @@
     <title>PyBrowserDash</title>
     <link rel="icon" href="/static/img/pybrowserdash.ico" type="image/bmp" sizes="16x16">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    {% if use_custom_styles %}
+        <link rel="stylesheet" type="text/css" href="/static/css/custom.css">
+    {% endif %}
     <script defer="" src="/static/dist/bundle.js"></script>
 </head>
 <body>
