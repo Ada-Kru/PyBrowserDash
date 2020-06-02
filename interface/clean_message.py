@@ -5,7 +5,7 @@ from .message_types import MESSAGE_TYPES
 
 def clean_message(msg):
     """
-    Additional formatting of message data.
+    Format message data.
 
     Modifies input dictionary in place.
     """

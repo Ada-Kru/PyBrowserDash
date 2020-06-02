@@ -1,4 +1,5 @@
 import pyfoobeef
+from asyncio import create_task, sleep, CancelledError
 
 
 class foobar2k_event_listener:
@@ -6,6 +7,7 @@ class foobar2k_event_listener:
 
     def __init__(self, bg_tasks):
         self._listener = None
+        self._connection_checker = None
         self._current_state = None
         self._bg_tasks = bg_tasks
 
@@ -32,6 +34,18 @@ class foobar2k_event_listener:
 
         # Start listening for events from the player.
         await self._listener.connect(reconnect_time=1)
+        self._connection_checker = create_task(self._check_connected())
+
+    async def _check_connected(self):
+        try:
+            while True:
+                connected = self._current_state is not None
+                if connected and not self._listener.is_connected():
+                    self._current_state = None
+                    self.update_all_clients()
+                await sleep(1)
+        except CancelledError:
+            return
 
     def state_changed(self, state):
         """Update the current player state and all clients."""
@@ -48,12 +62,12 @@ class foobar2k_event_listener:
 
     def make_update(self):
         """Make a status dictionary for websocket updates."""
-        if self._current_state is None:
+        state = self._current_state
+        if state is None:
             return {
                 "music": {"player_state": "disconnected", "active_item": {}}
             }
 
-        state = self._current_state
         active_info = {}
         if state.active_item.has_columns():
             col = state.active_item.columns
@@ -72,6 +86,7 @@ class foobar2k_event_listener:
     async def disconnect(self):
         """Disconnect listener."""
         if self._listener is not None:
+            await self._connection_checker.cancel()
             await self._listener.disconnect()
             self._listener = None
             self._current_state = None

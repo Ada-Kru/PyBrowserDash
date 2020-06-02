@@ -64,7 +64,7 @@ class MessageList extends PureComponent {
                                 </tr>
                             )
                         })}
-                        <div ref={this.tableEnd}></div>
+                        <tr ref={this.tableEnd}></tr>
                     </tbody>
                 </table>
             </div>

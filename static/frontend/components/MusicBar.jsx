@@ -60,6 +60,10 @@ class MusicBar extends PureComponent {
 
     updateProgress = () => {
         let newPos = this.state.position + 1
+        if (newPos > this.state.length) {
+            this.clearTimer()
+            return
+        }
         this.setState({
             position: newPos,
             positionDisplay: this.secondsToHHMMSS(newPos),
@@ -67,11 +71,9 @@ class MusicBar extends PureComponent {
     }
 
     setupProgress = () => {
+        this.clearTimer()
         if (this.state.musicStatus == "playing") {
-            this.clearTimer()
             this.timer = setInterval(this.updateProgress, 1000)
-        } else {
-            this.clearTimer()
         }
     }
 
