@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from .all_message_types import ALL_MSG_TYPES, DEFAULT_SEEN
-from .message_types import LOG_ONLY_MESSAGE
+from .message_types import MESSAGE_TYPES
 
 
 def clean_message(msg):
@@ -15,7 +15,7 @@ def clean_message(msg):
         msg["type"] = "unknown_type"
 
     msg.update(ALL_MSG_TYPES[msg["type"]])
-    if msg["alert_type"] == LOG_ONLY_MESSAGE:
+    if msg["alert_type"] == MESSAGE_TYPES["log_only"]:
         msg["seen"] = True
 
     if "time" not in msg or msg["time"] is None:

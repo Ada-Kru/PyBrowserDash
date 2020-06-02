@@ -14,7 +14,7 @@ from time import time
 from subprocess import call as sp_call
 from ipaddress import ip_address
 from .clean_message import clean_message
-from .message_types import DELAYED_REPEAT_MESSAGE
+from .message_types import MESSAGE_TYPES
 from .all_message_types import ALL_MSG_TYPES
 from .models import Message
 from .funcs import make_unused_id, get_client_ip
@@ -71,7 +71,7 @@ def messages_new(request):
 def speak_msg(msg, bg_tasks):
     bg = bg_tasks
     do_speak = True
-    if msg["alert_type"] == DELAYED_REPEAT_MESSAGE:
+    if msg["alert_type"] == MESSAGE_TYPES["delayed_repeat"]:
         now, key = time(), msg["sender"]
         if key in bg.no_repeat and now - bg.no_repeat[key] <= MAX_REPEAT_DELAY:
             do_speak = False
@@ -122,6 +122,7 @@ def messages_clear_unseen(request):
 def messages_history(request, limit):
     db_messages = Message.objects.order_by("time")[:limit]
     messages, counter = {}, 0
+    global_ip = ip_address(get_client_ip(request)).is_global
     for db_msg in db_messages:
         msg = {
             "sender": db_msg.sender,
@@ -131,6 +132,8 @@ def messages_history(request, limit):
             "data": db_msg.data,
         }
         msg.update(ALL_MSG_TYPES[db_msg.type])
+        if global_ip and msg["alert_type"] == MESSAGE_TYPES["sensitive"]:
+            continue
         messages[counter] = msg
         counter += 1
     return JsonResponse({"error": None, "messages": messages})

@@ -12,6 +12,7 @@ import os
 from django.core.asgi import get_asgi_application
 from PyBrowserDash.websocket import websocket_app
 from asyncio import create_task
+from ipaddress import ip_address
 from .background_tasks import BackgroundTasks
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyBrowserDash.settings")
@@ -29,7 +30,8 @@ async def application(scope, receive, send):
     if scope_type == "http":
         await django_app(scope, receive, send)
     elif scope_type == "websocket":
-        await websocket_app(scope, receive, send)
+        if ip_address(scope["client"][0]).is_private:
+            await websocket_app(scope, receive, send)
     elif scope_type == "lifespan":
         while True:
             message = await receive()
