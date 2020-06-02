@@ -10,6 +10,11 @@ class MessageList extends PureComponent {
             messages: this.props.messages,
             updatedUnseen: this.props.updatedUnseen,
         }
+        this.tableEnd = React.createRef()
+    }
+
+    componentDidMount = () => {
+        this.scrollToBottom()
     }
 
     componentDidUpdate = (prevProps) => {
@@ -19,6 +24,11 @@ class MessageList extends PureComponent {
                 updatedUnseen: this.props.updatedUnseen,
             })
         }
+        this.scrollToBottom()
+    }
+
+    scrollToBottom = () => {
+        this.tableEnd.current.scrollIntoView()
     }
 
     render() {
@@ -54,6 +64,7 @@ class MessageList extends PureComponent {
                                 </tr>
                             )
                         })}
+                        <div ref={this.tableEnd}></div>
                     </tbody>
                 </table>
             </div>

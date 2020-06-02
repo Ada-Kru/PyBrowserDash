@@ -1,6 +1,12 @@
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    JsonResponse,
+)
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
+from ratelimit.decorators import ratelimit
 from json import loads, JSONDecodeError
 from .validation import new_msg_validator, seen_messages_validator
 from validx import exc
@@ -33,9 +39,12 @@ def index(request):
 
 
 @csrf_exempt
+@ratelimit(key="ip", rate="15/m")
 def messages_new(request):
     if request.method != "POST":
-        raise HttpResponseBadRequest("GET not allowed.")
+        return HttpResponseBadRequest("GET not allowed.")
+    if getattr(request, "limited", False):
+        return HttpResponseForbidden("Rate limited")
 
     try:
         bg = request.scope["background_tasks"]

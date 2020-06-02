@@ -9,6 +9,7 @@ const WS_CONNECTING = 1
 const WS_CONNECTED = 2
 const STATUS_NORMAL_STYLE = { color: "white" }
 const STATUS_ERROR_STYLE = { color: "red" }
+const STATS_NOT_LOADED_MSG = "System stats not loaded"
 
 class App extends PureComponent {
     constructor(props) {
@@ -18,7 +19,7 @@ class App extends PureComponent {
             wsState: WS_DISCONNECTED,
             statusText: "Backend disconnected",
             statusStyle: STATUS_ERROR_STYLE,
-            statusStats: "",
+            statusStats: STATS_NOT_LOADED_MSG,
             updatedStatusText: false,
             updatedStatsOnly: false,
             musicStatus: "disconnected",
@@ -74,6 +75,7 @@ class App extends PureComponent {
         this.ws.onclose = (evt) => {
             this.setState({
                 wsState: WS_DISCONNECTED,
+                statusStats: STATS_NOT_LOADED_MSG,
             })
             this.setStatusText("Backend disconnected", STATUS_ERROR_STYLE)
             setTimeout(() => this._setupWebsocket(), 1000)

@@ -41,7 +41,7 @@ class ControlBar extends PureComponent {
                     }
                     onClick={this.props.toggleMute}
                 >
-                    Mute
+                    {state.backendMuted ? "Unmute" : "Mute"}
                 </button>
             </div>
         )
