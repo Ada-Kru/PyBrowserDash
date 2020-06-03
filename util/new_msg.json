@@ -1,7 +1,7 @@
 {
   "sender": "test.bat",
   "text": "test message",
-  "type": "default",
+  "type": "exit_vc",
   "time": "2020-06-01T20:12:20+00:00",
   "data": "{}"
 }

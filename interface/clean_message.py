@@ -10,11 +10,9 @@ def clean_message(msg):
     Modifies input dictionary in place.
     """
     if "type" not in msg:
-        msg["type"] = "unknown_type"
-    elif msg["type"] not in ALL_MSG_TYPES:
-        msg["type"] = "unknown_type"
+        msg["type"] = "default"
 
-    msg.update(ALL_MSG_TYPES[msg["type"]])
+    msg.update(ALL_MSG_TYPES.get(msg["type"], "unknown_type"))
     if msg["alert_type"] == MESSAGE_TYPES["log_only"]:
         msg["seen"] = True
         msg["tts"] = False

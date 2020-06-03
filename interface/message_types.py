@@ -1,15 +1,20 @@
 MESSAGE_TYPES = {
     "normal": 0,
-    "log_only": 1,
-    "delayed_repeat": 2,
-    "sensitive": 3,
-    "unknown": 4,
+    "unknown": 1,
+    "log_only": 2,
+    "delayed_repeat": 3,
+    "sensitive": 4,
+    "speak_only": 5,
 }
 
 message_info = {
     "default": {
         "alert_type": MESSAGE_TYPES["normal"],
         "class_name": "normalMessage",
+    },
+    "unknown_type": {
+        "alert_type": MESSAGE_TYPES["unknown"],
+        "class_name": "unknownTypeMessage",
     },
     "log_only": {
         "alert_type": MESSAGE_TYPES["log_only"],
@@ -23,8 +28,8 @@ message_info = {
         "alert_type": MESSAGE_TYPES["sensitive"],
         "class_name": "sensitiveMessage",
     },
-    "unknown_type": {
-        "alert_type": MESSAGE_TYPES["unknown"],
-        "class_name": "unknownTypeMessage",
+    "speak_only": {
+        "alert_type": MESSAGE_TYPES["speak_only"],
+        "class_name": "speakOnlyMessage",
     },
 }

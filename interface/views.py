@@ -52,17 +52,18 @@ def messages_new(request):
         new_msg_validator(msg)
         clean_message(msg)
 
-        Message(
-            sender=msg["sender"],
-            text=msg["text"],
-            type=msg["type"],
-            time=msg["time"],
-            data=msg["data"],
-        ).save()
-        if not msg["seen"]:
-            msg_id = make_unused_id(bg.unseen)
-            bg.unseen[msg_id] = msg
-            bg.send_all_websockets({"new_msg": {msg_id: msg}})
+        if msg["alert_type"] != MESSAGE_TYPES["speak_only"]:
+            Message(
+                sender=msg["sender"],
+                text=msg["text"],
+                type=msg["type"],
+                time=msg["time"],
+                data=msg["data"],
+            ).save()
+            if not msg["seen"]:
+                msg_id = make_unused_id(bg.unseen)
+                bg.unseen[msg_id] = msg
+                bg.send_all_websockets({"new_msg": {msg_id: msg}})
 
         if msg["tts"]:
             speak_msg(msg, bg)

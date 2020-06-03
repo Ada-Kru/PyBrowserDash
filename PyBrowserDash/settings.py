@@ -27,7 +27,6 @@ DEBUG = False
 
 if DEBUG:
     import mimetypes
-
     mimetypes.add_type("application/javascript", ".js", True)
 
 ALLOWED_HOSTS = ["*"]
