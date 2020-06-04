@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import moment from "moment"
+import moment from "moment-mini"
 
 const DATE_FORMAT = "HH:mm:ss / MM-DD-YYYY"
 

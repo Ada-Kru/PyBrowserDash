@@ -38,8 +38,8 @@ class StatusBar extends PureComponent {
                     {state.statusText}
                 </span>
                 <div className="statusSpansHolder">
-                    <span id="statusWeather" title={state.statusWeather.hover}>
-                        {state.statusWeather.display}
+                    <span id="statusWeather" title={state.weatherTooltip}>
+                        {state.weatherDisplay}
                     </span>
                     <span id="statusStats">{state.statusStats}</span>
                 </div>
