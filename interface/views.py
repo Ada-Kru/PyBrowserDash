@@ -5,6 +5,7 @@ from django.http import (
     JsonResponse,
 )
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.gzip import gzip_page
 from django.template import loader
 from ratelimit.decorators import ratelimit
 from json import loads, JSONDecodeError
@@ -29,6 +30,7 @@ except ImportError:
 MAX_REPEAT_DELAY = 300
 
 
+@gzip_page
 def index(request):
     if ip_address(get_client_ip(request)).is_global:
         return HttpResponseBadRequest("")
@@ -95,6 +97,7 @@ def speak_msg(msg, bg_tasks):
                 bg.no_repeat.pop(key)
 
 
+@gzip_page
 @csrf_exempt
 def messages_unseen(request):
     bg = request.scope["background_tasks"]
@@ -125,6 +128,7 @@ def messages_clear_unseen(request):
         )
 
 
+@gzip_page
 def messages_history(request, limit):
     db_messages = Message.objects.order_by("time")[:limit]
     messages, counter = {}, 0

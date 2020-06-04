@@ -23,10 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "@cg@6z9g30jz()e7j2x*e9nesbs%flvozph1+r6rrxpk!s9)1f"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     import mimetypes
+
     mimetypes.add_type("application/javascript", ".js", True)
 
 ALLOWED_HOSTS = ["*"]
@@ -124,7 +125,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, "public"),
 # ]
-STATICFILES_STORAGE = (
-    "PyBrowserDash.storage.CompressedManifestStaticFilesStorage"
-)
+STATICFILES_STORAGE = "PyBrowserDash.storage.CompressedStaticFilesStorage"
 WHITENOISE_ROOT = os.path.join(BASE_DIR, "static")

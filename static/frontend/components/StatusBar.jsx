@@ -6,6 +6,7 @@ class StatusBar extends PureComponent {
         this.state = {
             statusText: this.props.statusText,
             statusStyle: this.props.statusStyle,
+            statusWeather: this.props.statusWeather,
             statusStats: this.props.statusStats,
         }
     }
@@ -33,7 +34,12 @@ class StatusBar extends PureComponent {
                 <span id="statusText" style={state.statusStyle}>
                     {state.statusText}
                 </span>
-                <span id="statusStats">{state.statusStats}</span>
+                <div>
+                    <span id="statusWeather" title={state.statusWeather.hover}>
+                        {state.statusWeather.display}
+                    </span>
+                    <span id="statusStats">{state.statusStats}</span>
+                </div>
             </div>
         )
     }

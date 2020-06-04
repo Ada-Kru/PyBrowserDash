@@ -9,7 +9,7 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  background-color: #111;
+  background-color: black;
   color: #ffffff; }
 
 ::selection {
@@ -21,7 +21,7 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column-reverse;
-  background-color: #111; }
+  background: linear-gradient(180deg, black 0%, #191919 100%); }
 
 span.spacer {
   padding: 0px 10px; }
@@ -136,14 +136,24 @@ span.musicTimes {
   padding-top: 2px;
   padding-left: 3px; }
 
+#statusWeather {
+  white-space: pre-wrap;
+  font-family: monospace;
+  padding: 0px 4px;
+  border-top: 1px solid #333;
+  border-left: 1px solid #333;
+  border-bottom: 1px solid #888;
+  border-right: 1px solid #888;
+  margin-right: 10px; }
+
 #statusStats {
   white-space: pre-wrap;
   font-family: monospace;
   padding: 0px 4px;
   border-top: 1px solid #333;
   border-left: 1px solid #333;
-  border-bottom: 1px solid #aaa;
-  border-right: 1px solid #aaa; }
+  border-bottom: 1px solid #888;
+  border-right: 1px solid #888; }
 
 #msgTable {
   width: 100%;

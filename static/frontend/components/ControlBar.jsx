@@ -30,7 +30,7 @@ class ControlBar extends PureComponent {
                     className="controlButton"
                     onClick={this.props.messageButtonClick}
                 >
-                    {state.displayed ? "Close Messages" : "Show History"}
+                    {state.displayed ? "Close Messages" : "History"}
                 </button>
                 <span className="spacer"></span>
                 <button

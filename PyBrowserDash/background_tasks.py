@@ -1,5 +1,6 @@
-from PyBrowserDash.foobar2k import foobar2k_event_listener
+from PyBrowserDash.music import MusicEventListener
 from PyBrowserDash.system_monitor import SystemMonitor
+from PyBrowserDash.weather import WeatherChecker
 from PyBrowserDash.text_speaker import TextSpeaker
 from asyncio import create_task
 
@@ -9,9 +10,9 @@ class BackgroundTasks():
 
     def __init__(self):
         self.ws_connections = set()
-        ael = foobar2k_event_listener(self)
-        self._music_event_listener = ael
+        self._music_event_listener = MusicEventListener(self)
         self._system_monitor = SystemMonitor(self)
+        self._weather_checker = WeatherChecker(self)
         self._tasks_started = False
         self._text_speaker = TextSpeaker()
         self._muted = False
@@ -27,6 +28,7 @@ class BackgroundTasks():
         self._tasks_started = True
         await self._music_event_listener.listen()
         create_task(self._system_monitor.run())
+        await self._weather_checker.start()
 
     def send_all_websockets(self, data):
         """Send message to all clients."""

@@ -10,6 +10,10 @@ const WS_CONNECTED = 2
 const STATUS_NORMAL_STYLE = { color: "white" }
 const STATUS_ERROR_STYLE = { color: "red" }
 const STATS_NOT_LOADED_MSG = "System stats not loaded"
+const WEATHER_NOT_LOADED = {
+    display: "Weather info not loaded",
+    hover: "Weather info not loaded",
+}
 
 class App extends PureComponent {
     constructor(props) {
@@ -19,6 +23,7 @@ class App extends PureComponent {
             wsState: WS_DISCONNECTED,
             statusText: "Backend disconnected",
             statusStyle: STATUS_ERROR_STYLE,
+            statusWeather: WEATHER_NOT_LOADED,
             statusStats: STATS_NOT_LOADED_MSG,
             updatedStatusText: false,
             updatedStatsOnly: false,
@@ -38,6 +43,7 @@ class App extends PureComponent {
         // Function maps for websocket events and internal events.
         this._wsMsgMap = {
             sys: this._onSystemInfoUpdate,
+            weather: this._onWeatherUpdate,
             backend: this._onBackendUpdate,
             music: this._onMusicPlayerUpdate,
             new_msg: this._onNewMessages,
@@ -94,6 +100,13 @@ class App extends PureComponent {
         this.setState({
             statusStats: update,
             updatedStatsOnly: !this.state.updatedStatsOnly,
+        })
+    }
+
+    _onWeatherUpdate = (update) => {
+        this.setState({
+            statusWeather: update,
+            updatedStatusText: !this.state.updatedStatusText,
         })
     }
 
@@ -214,6 +227,7 @@ class App extends PureComponent {
                         updatedStatsOnly={state.updatedStatsOnly}
                         statusText={state.statusText}
                         statusStyle={state.statusStyle}
+                        statusWeather={state.statusWeather}
                         statusStats={state.statusStats}
                     ></StatusBar>
                 </div>
