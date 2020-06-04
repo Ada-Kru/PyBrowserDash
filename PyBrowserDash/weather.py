@@ -27,13 +27,14 @@ class WeatherChecker:
                 "Content-Type": "application/json",
             }
             async with ClientSession(headers=headers) as session:
-                try:
-                    async with session.get(WEATHER_ENDPOINT) as resp:
-                        self._update_data(await resp.json())
-                        self._update_clients()
-                except ClientError as err:
-                    print(err)
-                await sleep(60 * 30)
+                while True:
+                    try:
+                        async with session.get(WEATHER_ENDPOINT) as resp:
+                            self._update_data(await resp.json())
+                            self._update_clients()
+                    except ClientError as err:
+                        print(err)
+                    await sleep(60 * 30)
         except CancelledError:
             self._checker = None
             self.current_weather = None
@@ -60,8 +61,8 @@ class WeatherChecker:
         cw = self.current_weather
         return {
             "display": (
-                f"{cw['temp']}°F ▬▬ {cw['desc']} ▬▬ "
-                f"Wind: {cw['wind_speed']}Mph {cw['wind_dir']}"
+                f"{cw['temp']}°F ▬▬ {cw['wind_speed']}Mph {cw['wind_dir']} ▬▬ "
+                f"{cw['desc']}"
             ),
             "hover": f"Last updated: {datetime.now().strftime('%H:%M')}",
         }
