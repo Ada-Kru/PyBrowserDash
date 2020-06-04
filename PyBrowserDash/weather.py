@@ -45,7 +45,8 @@ class WeatherChecker:
         weather = {
             "temp": int((9 / 5) * p["temperature"]["value"] + 32),
             "wind_dir": degrees_to_direction(p["windDirection"]["value"]),
-            "wind_speed": int(p["windSpeed"]["value"] * 2.236936),
+            "wind_speed": int(p["windSpeed"]["value"] * 2.237),
+            "wind_gust": p["windGust"]["value"],
             "desc": p["textDescription"],
         }
         self.current_weather = weather
@@ -59,10 +60,12 @@ class WeatherChecker:
             }
 
         cw = self.current_weather
+        wind_gust = cw["wind_gust"]
+        gust_str = "" if not wind_gust else f"-{wind_gust * 2.237}"
         return {
             "display": (
-                f"{cw['temp']}°F ▬▬ {cw['wind_speed']}Mph {cw['wind_dir']} ▬▬ "
-                f"{cw['desc']}"
+                f"{cw['temp']}°F ▬▬ {cw['wind_speed']}{gust_str}Mph "
+                f"{cw['wind_dir']} ▬▬ {cw['desc']}"
             ),
             "hover": f"Last updated: {datetime.now().strftime('%H:%M')}",
         }
