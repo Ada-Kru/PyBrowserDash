@@ -42,11 +42,16 @@ class WeatherChecker:
 
     def _update_data(self, data):
         p = data["properties"]
+        humidity = p["relativeHumidity"]["value"]
+        humidity = int(humidity) if humidity is not None else 0
         weather = {
-            "temp": int((9 / 5) * p["temperature"]["value"] + 32),
+            "temp": celcius_to_farenheit(p["temperature"]["value"], True),
+            "heat": celcius_to_farenheit(p["heatIndex"]["value"], True),
+            "chill": celcius_to_farenheit(p["windChill"]["value"], True),
             "wind_dir": degrees_to_direction(p["windDirection"]["value"]),
             "wind_speed": int(p["windSpeed"]["value"] * 2.237),
             "wind_gust": p["windGust"]["value"],
+            "humidity": humidity,
             "desc": p["textDescription"],
         }
         self.current_weather = weather
@@ -67,7 +72,12 @@ class WeatherChecker:
                 f"{cw['temp']}°F ▬▬ {cw['wind_speed']}{gust_str}Mph "
                 f"{cw['wind_dir']} ▬▬ {cw['desc']}"
             ),
-            "hover": f"Last updated: {datetime.now().strftime('%H:%M')}",
+            "hover": (
+                f"Last updated: {datetime.now().strftime('%H:%M')}\n"
+                f"Heat Index: {cw['heat']}°F\n"
+                f"Wind Chill: {cw['chill']}°F\n"
+                f"Humidity: {cw['humidity']}%"
+            ),
         }
 
     def _update_clients(self):
@@ -78,6 +88,13 @@ class WeatherChecker:
         """Disconnect listener."""
         if self._checker is not None:
             await self._checker.cancel()
+
+
+def celcius_to_farenheit(temp, as_int=False):
+    if temp is None:
+        return 0
+    output = int((9 / 5) * temp + 32)
+    return int(output) if as_int else output
 
 
 def degrees_to_direction(degrees):
