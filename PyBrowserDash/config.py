@@ -14,3 +14,9 @@ custom_message_info = {
 WOL_COMMAND = r""
 # If true use add /static/css/custom.css to the index html
 USE_CUSTOM_STYLES = False
+# Weather.gov API endpoint
+WEATHER_ENDPOINT = (
+    "https://api.weather.gov/stations/KDFW/"
+    "observations/latest?require_qc=false"
+)
+WEATHER_USER_AGENT = "PyBrowserDash"

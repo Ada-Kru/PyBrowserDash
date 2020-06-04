@@ -82,6 +82,7 @@ class App extends PureComponent {
             this.setState({
                 wsState: WS_DISCONNECTED,
                 statusStats: STATS_NOT_LOADED_MSG,
+                statusWeather: WEATHER_NOT_LOADED,
             })
             this.setStatusText("Backend disconnected", STATUS_ERROR_STYLE)
             setTimeout(() => this._setupWebsocket(), 1000)

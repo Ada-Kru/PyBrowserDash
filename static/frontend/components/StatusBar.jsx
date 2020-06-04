@@ -23,6 +23,7 @@ class StatusBar extends PureComponent {
                 statusText: this.props.statusText,
                 statusStyle: this.props.statusStyle,
                 statusStats: this.props.statusStats,
+                statusWeather: this.props.statusWeather,
             })
         }
     }

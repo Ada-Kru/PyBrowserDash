@@ -5,7 +5,7 @@ from PyBrowserDash.text_speaker import TextSpeaker
 from asyncio import create_task
 
 
-class BackgroundTasks():
+class BackgroundTasks:
     """Handle asynchronous background tasks and events from views."""
 
     def __init__(self):
@@ -49,8 +49,19 @@ class BackgroundTasks():
 
     def get_backend_status(self):
         """Get a dictionary with the backend's status."""
-        return {"muted": self._muted}
+        return {"backend": {"muted": self._muted}}
 
     def get_music_player_status(self):
         """Get a dictionary with the audio player's status."""
         return self._music_event_listener.make_update()
+
+    def get_weather_status(self):
+        """Get a dictionary with the status for the weather module."""
+        return {"weather": self._weather_checker.make_update()}
+
+    def make_initial_status(self):
+        """Make a dict of the module statuses for when clients connect."""
+        backend = self.get_backend_status()
+        music = self.get_music_player_status()
+        weather = self.get_weather_status()
+        return {"unseen": self.unseen, **music, **weather, **backend}

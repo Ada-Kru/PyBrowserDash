@@ -1,7 +1,11 @@
 from asyncio import create_task, sleep, CancelledError
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientError
+from datetime import datetime
 
-endpoint = "https://api.weather.gov/stations/KDFW/observations/latest?require_qc=false"
+try:
+    from PyBrowserDash.local_config import WEATHER_ENDPOINT, WEATHER_USER_AGENT
+except ImportError:
+    from PyBrowserDash.config import WEATHER_ENDPOINT, WEATHER_USER_AGENT
 
 
 class WeatherChecker:
@@ -14,18 +18,21 @@ class WeatherChecker:
 
     async def start(self):
         """Start checking for weather info from weather.gov."""
-        self._checker = create_task(self._get_weather_loop())
+        self._checker = create_task(self._checker_loop())
 
     async def _checker_loop(self):
         try:
             headers = {
-                "User-Agent": "PyBrowserDash - Local",
+                "User-Agent": WEATHER_USER_AGENT,
                 "Content-Type": "application/json",
             }
             async with ClientSession(headers=headers) as session:
-                async with session.get(endpoint) as resp:
-                    self._update_data(await resp.json())
-                    self._update_clients()
+                try:
+                    async with session.get(WEATHER_ENDPOINT) as resp:
+                        self._update_data(await resp.json())
+                        self._update_clients()
+                except ClientError as err:
+                    print(err)
                 await sleep(60 * 30)
         except CancelledError:
             self._checker = None
@@ -52,10 +59,11 @@ class WeatherChecker:
 
         cw = self.current_weather
         return {
-            "weather": {
-                "display": f"{cw['temp']}°F {cw['desc']}",
-                "hover": f"Wind: {cw['wind_speed']}Mph {cw['wind_dir']}",
-            }
+            "display": (
+                f"{cw['temp']}°F ▬▬ {cw['desc']} ▬▬ "
+                f"Wind: {cw['wind_speed']}Mph {cw['wind_dir']}"
+            ),
+            "hover": f"Last updated: {datetime.now().strftime('%H:%M')}",
         }
 
     def _update_clients(self):
