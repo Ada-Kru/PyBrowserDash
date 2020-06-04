@@ -35,7 +35,7 @@ class StatusBar extends PureComponent {
                 <span id="statusText" style={state.statusStyle}>
                     {state.statusText}
                 </span>
-                <div>
+                <div className="statusSpansHolder">
                     <span id="statusWeather" title={state.statusWeather.hover}>
                         {state.statusWeather.display}
                     </span>
