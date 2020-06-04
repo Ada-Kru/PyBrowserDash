@@ -10,10 +10,7 @@ const WS_CONNECTED = 2
 const STATUS_NORMAL_STYLE = { color: "white" }
 const STATUS_ERROR_STYLE = { color: "red" }
 const STATS_NOT_LOADED_MSG = "System stats not loaded"
-const WEATHER_NOT_LOADED = {
-    display: "Weather info not loaded",
-    tooltip: "Weather info not loaded",
-}
+const WEATHER_NOT_LOADED = "Weather info not loaded"
 
 class App extends PureComponent {
     constructor(props) {
@@ -23,7 +20,8 @@ class App extends PureComponent {
             wsState: WS_DISCONNECTED,
             statusText: "Backend disconnected",
             statusStyle: STATUS_ERROR_STYLE,
-            statusWeather: WEATHER_NOT_LOADED,
+            weatherDisplay: WEATHER_NOT_LOADED,
+            weatherTooltip: WEATHER_NOT_LOADED,
             statusStats: STATS_NOT_LOADED_MSG,
             updatedStatusText: false,
             updatedStatsOnly: false,
@@ -70,7 +68,6 @@ class App extends PureComponent {
 
         this.ws.onmessage = (evt) => {
             let msg = JSON.parse(evt.data)
-            // console.log(msg)
             for (let [type, data] of Object.entries(msg)) {
                 if (this._wsMsgMap.hasOwnProperty(type)) {
                     this._wsMsgMap[type](data)
@@ -106,7 +103,8 @@ class App extends PureComponent {
 
     _onWeatherUpdate = (update) => {
         this.setState({
-            statusWeather: update,
+            weatherDisplay: update.display,
+            weatherTooltip: update.tooltip,
             updatedStatusText: !this.state.updatedStatusText,
         })
     }
@@ -228,8 +226,8 @@ class App extends PureComponent {
                         updatedStatsOnly={state.updatedStatsOnly}
                         statusText={state.statusText}
                         statusStyle={state.statusStyle}
-                        weatherDisplay={state.statusWeather.display}
-                        weatherTooltip={state.statusWeather.tooltip}
+                        weatherDisplay={state.weatherDisplay}
+                        weatherTooltip={state.weatherTooltip}
                         statusStats={state.statusStats}
                     ></StatusBar>
                 </div>

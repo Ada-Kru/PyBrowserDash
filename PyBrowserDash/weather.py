@@ -69,7 +69,7 @@ class WeatherChecker:
         gust_str = "" if not wind_gust else f"-{wind_gust * 2.237}"
         return {
             "display": (
-                f"{cw['temp']}°F ▬ {cw['wind_speed']}{gust_str}Mph "
+                f"{cw['temp']}°F ▬ {cw['wind_speed']}{gust_str} Mph "
                 f"{cw['wind_dir']} ▬ {cw['desc']}"
             ),
             "tooltip": (
