@@ -12,7 +12,7 @@ const STATUS_ERROR_STYLE = { color: "red" }
 const STATS_NOT_LOADED_MSG = "System stats not loaded"
 const WEATHER_NOT_LOADED = {
     display: "Weather info not loaded",
-    hover: "Weather info not loaded",
+    tooltip: "Weather info not loaded",
 }
 
 class App extends PureComponent {
@@ -228,7 +228,8 @@ class App extends PureComponent {
                         updatedStatsOnly={state.updatedStatsOnly}
                         statusText={state.statusText}
                         statusStyle={state.statusStyle}
-                        statusWeather={state.statusWeather}
+                        weatherDisplay={state.statusWeather.display}
+                        weatherTooltip={state.statusWeather.tooltip}
                         statusStats={state.statusStats}
                     ></StatusBar>
                 </div>

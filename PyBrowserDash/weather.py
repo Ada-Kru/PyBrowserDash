@@ -43,7 +43,6 @@ class WeatherChecker:
     def _update_data(self, data):
         p = data["properties"]
         humidity = p["relativeHumidity"]["value"]
-        humidity = int(humidity) if humidity is not None else 0
         weather = {
             "temp": celcius_to_farenheit(p["temperature"]["value"], True),
             "heat": celcius_to_farenheit(p["heatIndex"]["value"], True),
@@ -51,8 +50,9 @@ class WeatherChecker:
             "wind_dir": degrees_to_direction(p["windDirection"]["value"]),
             "wind_speed": int(p["windSpeed"]["value"] * 2.237),
             "wind_gust": p["windGust"]["value"],
-            "humidity": humidity,
+            "humidity": int(humidity) if humidity is not None else 0,
             "desc": p["textDescription"],
+            "last_update": datetime.now().strftime('%H:%M'),
         }
         self.current_weather = weather
 
@@ -61,7 +61,7 @@ class WeatherChecker:
         if self.current_weather is None:
             return {
                 "display": "Weather info not loaded",
-                "hover": "Weather info not loaded",
+                "tooltip": "Weather info not loaded",
             }
 
         cw = self.current_weather
@@ -69,11 +69,11 @@ class WeatherChecker:
         gust_str = "" if not wind_gust else f"-{wind_gust * 2.237}"
         return {
             "display": (
-                f"{cw['temp']}°F ▬▬ {cw['wind_speed']}{gust_str}Mph "
-                f"{cw['wind_dir']} ▬▬ {cw['desc']}"
+                f"{cw['temp']}°F ▬ {cw['wind_speed']}{gust_str}Mph "
+                f"{cw['wind_dir']} ▬ {cw['desc']}"
             ),
-            "hover": (
-                f"Last updated: {datetime.now().strftime('%H:%M')}\n"
+            "tooltip": (
+                f"Last updated: {cw['last_update']}\n"
                 f"Heat Index: {cw['heat']}°F\n"
                 f"Wind Chill: {cw['chill']}°F\n"
                 f"Humidity: {cw['humidity']}%"

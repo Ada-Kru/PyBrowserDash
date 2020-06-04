@@ -6,7 +6,8 @@ class StatusBar extends PureComponent {
         this.state = {
             statusText: this.props.statusText,
             statusStyle: this.props.statusStyle,
-            statusWeather: this.props.statusWeather,
+            weatherDisplay: this.props.weatherDisplay,
+            weatherTooltip: this.props.weatherTooltip,
             statusStats: this.props.statusStats,
         }
     }
@@ -23,7 +24,8 @@ class StatusBar extends PureComponent {
                 statusText: this.props.statusText,
                 statusStyle: this.props.statusStyle,
                 statusStats: this.props.statusStats,
-                statusWeather: this.props.statusWeather,
+                weatherDisplay: this.props.weatherDisplay,
+                weatherTooltip: this.props.weatherTooltip,
             })
         }
     }
