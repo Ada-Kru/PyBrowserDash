@@ -71,7 +71,7 @@ class ws_connection:
     def send_backend_status(self):
         """Send backend information to the client."""
         bg_tasks = self.scope["background_tasks"]
-        self.send_msg({"backend": bg_tasks.get_backend_status()})
+        self.send_msg(bg_tasks.get_backend_status())
 
     async def _on_recv(self, text):
         try:
