@@ -22,8 +22,11 @@ bg_tasks = BackgroundTasks()
 
 
 async def application(scope, receive, send):
+    # Start background tasks if they have not been started.
     if not bg_tasks.tasks_started():
         create_task(bg_tasks.start_tasks())
+    # Add background tasks instance to scope so that it is accessable from
+    # views and async functions.
     scope["background_tasks"] = bg_tasks
     scope_type = scope["type"]
 

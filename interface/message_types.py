@@ -1,3 +1,5 @@
+# Default message types and HTML class names.
+
 MESSAGE_TYPES = {
     "normal": 0,
     "unknown": 1,

@@ -4,11 +4,7 @@ from .message_types import MESSAGE_TYPES
 
 
 def clean_message(msg):
-    """
-    Format message data.
-
-    Modifies input dictionary in place.
-    """
+    """Format message data.  Modifies input dictionary in place."""
     if "type" not in msg:
         msg["type"] = "default"
 

@@ -6,7 +6,7 @@ from asyncio import create_task
 
 
 class BackgroundTasks:
-    """Handle asynchronous background tasks and events from views."""
+    """Handle background tasks and allow communication with async functions."""
 
     def __init__(self):
         self.ws_connections = set()

@@ -37,6 +37,7 @@ class MusicEventListener:
         self._connection_checker = create_task(self._check_connected())
 
     async def _check_connected(self):
+        """Check if the player has disconnected."""
         try:
             while True:
                 connected = self._current_state is not None

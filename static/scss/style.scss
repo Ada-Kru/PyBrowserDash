@@ -167,7 +167,7 @@ span.musicTimes {
     margin-top: -1px;
 }
 
-#statusWeather {
+#statusStats, #statusWeather {
     white-space: pre-wrap;
     font-family: monospace;
     padding: 0px 4px;
@@ -175,17 +175,12 @@ span.musicTimes {
     border-left: 1px solid #333;
     border-bottom: 1px solid #888;
     border-right: 1px solid #888;
-    margin-right: 10px;
+    user-select: none;
+    cursor: default;
 }
 
-#statusStats {
-    white-space: pre-wrap;
-    font-family: monospace;
-    padding: 0px 4px;
-    border-top: 1px solid #333;
-    border-left: 1px solid #333;
-    border-bottom: 1px solid #888;
-    border-right: 1px solid #888;
+#statusWeather {
+    margin-right: 10px;
 }
 
 #msgTable {

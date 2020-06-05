@@ -1,3 +1,4 @@
+# User modifiable configuration file
 from interface.message_types import MESSAGE_TYPES
 
 
@@ -19,4 +20,5 @@ WEATHER_ENDPOINT = (
     "https://api.weather.gov/stations/KDFW/"
     "observations/latest?require_qc=false"
 )
+# User agent to use for the weather.gov API
 WEATHER_USER_AGENT = "PyBrowserDash"

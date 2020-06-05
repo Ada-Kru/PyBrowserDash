@@ -21,6 +21,7 @@ class WeatherChecker:
         self._checker = create_task(self._checker_loop())
 
     async def _checker_loop(self):
+        """Get weather data from the API every X minutes."""
         try:
             headers = {
                 "User-Agent": WEATHER_USER_AGENT,
@@ -41,20 +42,29 @@ class WeatherChecker:
             return
 
     def _update_data(self, data):
-        p = data["properties"]
-        humidity = p["relativeHumidity"]["value"]
-        weather = {
-            "temp": celcius_to_farenheit(p["temperature"]["value"], True),
-            "heat": celcius_to_farenheit(p["heatIndex"]["value"], True),
-            "chill": celcius_to_farenheit(p["windChill"]["value"], True),
-            "wind_dir": degrees_to_direction(p["windDirection"]["value"]),
-            "wind_speed": int(p["windSpeed"]["value"] * 2.237),
-            "wind_gust": p["windGust"]["value"],
-            "humidity": int(humidity) if humidity is not None else 0,
-            "desc": p["textDescription"],
-            "last_update": datetime.now().strftime('%H:%M'),
-        }
-        self.current_weather = weather
+        """Update last weather state with the data returned from the API."""
+        try:
+            p = data["properties"]
+            temp = p["temperature"]["value"]
+            if temp is None:
+                return
+
+            weather = {
+                "temp": temp,
+                "heat": p["heatIndex"]["value"],
+                "chill": p["windChill"]["value"],
+                "wind_speed": p["windSpeed"]["value"],
+                "wind_dir": p["windDirection"]["value"],
+                "wind_gust": p["windGust"]["value"],
+                "humidity": p["relativeHumidity"]["value"],
+                "pressure": p["barometricPressure"]["value"],
+                "desc": p["textDescription"],
+                "last_update": datetime.now().strftime("%-H:%M"),
+            }
+            self.current_weather = weather
+        except (ValueError, TypeError, Exception) as err:
+            print(err)
+            return
 
     def make_update(self):
         """Make an dict of strings with the current weather data."""
@@ -64,25 +74,37 @@ class WeatherChecker:
                 "tooltip": "Weather info not loaded",
             }
 
+        # Convert weather readings to strings.  Handles null readings.
+        # v = current reading.
         cw = self.current_weather
-        wind_gust = cw["wind_gust"]
-        gust_str = "" if not wind_gust else f"-{wind_gust * 2.237}"
+        v = cw["temp"]
+        temp = f"{convert_temp(v)}" if v is not None else "-"
+        v = cw["wind_speed"]
+        wspeed = 0 if v is None else int(v * 2.237)
+        v = cw["wind_dir"]
+        wind_dir = f" {degrees_to_direction(v)}" if v is not None else ""
+        v = cw["wind_gust"]
+        gust = "" if not v else f"Gust: {int(v * 2.237)} Mph "
+        v = cw["heat"]
+        heat = f"Heat Index: {convert_temp(v)}°F\n" if v is not None else ""
+        v = cw["chill"]
+        chill = f"Wind Chill: {convert_temp(v)}°F\n" if v is not None else ""
+        v = cw["pressure"]
+        press = f"Pressure: {int(v / 100)} hPa\n" if v is not None else ""
+        v = cw["humidity"]
+        hum = f"Humidity: {int(v)}%" if v is not None else ""
         return {
             "display": (
-                f"{cw['temp']}°F ▬ {cw['wind_speed']}{gust_str} Mph "
-                f"{cw['wind_dir']} ▬ {cw['desc']}"
+                f"{temp}°F ▬ {wspeed} Mph {gust}{wind_dir} ▬ {cw['desc']}"
             ),
             "tooltip": (
-                f"Last updated: {cw['last_update']}\n"
-                f"Heat Index: {cw['heat']}°F\n"
-                f"Wind Chill: {cw['chill']}°F\n"
-                f"Humidity: {cw['humidity']}%"
+                f"Last updated: {cw['last_update']}\n{heat}{chill}{press}{hum}"
             ),
         }
 
     def _update_clients(self):
         """Update clients with new weather information."""
-        self._bg_tasks.send_all_websockets(self.make_update())
+        self._bg_tasks.send_all_websockets({"weather": self.make_update()})
 
     async def disconnect(self):
         """Disconnect listener."""
@@ -90,15 +112,19 @@ class WeatherChecker:
             await self._checker.cancel()
 
 
-def celcius_to_farenheit(temp, as_int=False):
-    if temp is None:
-        return 0
-    output = int((9 / 5) * temp + 32)
-    return int(output) if as_int else output
+def convert_temp(temp):
+    """Convert floating point Celcius temperature to integer Farenheit."""
+    return int(cel_to_farn(temp))
+
+
+def cel_to_farn(temp):
+    """Convert Celcius to Farenheit."""
+    return (9 / 5) * temp + 32
 
 
 def degrees_to_direction(degrees):
-    if degrees < 22.5:
+    """Convert a radial degree integer to a compass heading."""
+    if degrees is None or degrees < 22.5:
         return "N"
     elif degrees < 67.5:
         return "NE"

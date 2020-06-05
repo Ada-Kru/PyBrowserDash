@@ -3,6 +3,7 @@ from json import dumps, loads, JSONDecodeError
 
 
 async def websocket_app(scope, receive, send):
+    """Create a websocket instance and add/remove to/from connection pool."""
     ws_connections = scope["background_tasks"].ws_connections
     connection = ws_connection(scope, receive, send)
     ws_connections.add(connection)
@@ -56,7 +57,7 @@ class ws_connection:
                 break
 
     def send_msg(self, msg):
-        """Send a message over the websocket."""
+        """Put serializable data into queue to be sent over the websocket."""
         if self.connected:
             self.q.put_nowait(dumps(msg))
             return True
@@ -74,6 +75,7 @@ class ws_connection:
         self.send_msg(bg_tasks.get_backend_status())
 
     async def _on_recv(self, text):
+        """Handle messages."""
         try:
             bg_tasks = self.scope["background_tasks"]
             msg = loads(text)

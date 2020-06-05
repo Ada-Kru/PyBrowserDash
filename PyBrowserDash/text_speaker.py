@@ -12,6 +12,7 @@ class TextSpeaker:
         self._thread.start()
 
     def _run(self):
+        """Speak messages from queue out loud."""
         engine = pyttsx3.init()
         while True:
             engine.say(self._q.get())

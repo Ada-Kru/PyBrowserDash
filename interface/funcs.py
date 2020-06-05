@@ -7,11 +7,13 @@ CHARS = ascii_letters + digits
 
 
 def make_unused_id(current_ids):
+    """Create randomized IDs until one is found that is not in use."""
     new_id = "".join(choice(CHARS) for _ in range(ID_LENGTH))
     return new_id if new_id not in current_ids else make_unused_id(current_ids)
 
 
 def get_client_ip(request):
+    """Get the client's ip address from a request object."""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[-1].strip()

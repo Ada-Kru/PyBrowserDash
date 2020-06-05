@@ -50,6 +50,7 @@ class App extends PureComponent {
         }
     }
 
+    // Handle the websocket connection.
     _setupWebsocket = () => {
         this.ws = new WebSocket(
             `ws://${window.location.hostname}:${window.location.port}/`
@@ -90,10 +91,14 @@ class App extends PureComponent {
         }
     }
 
+    // Send data over the websocket.
     _send = (data) => {
-        this.ws.send(JSON.stringify(data))
+        if (this.state.wsState == WS_CONNECTED) {
+            this.ws.send(JSON.stringify(data))
+        }
     }
 
+    // Update the status bar with system statistics.
     _onSystemInfoUpdate = (update) => {
         this.setState({
             statusStats: update,
@@ -101,6 +106,7 @@ class App extends PureComponent {
         })
     }
 
+    // Update the status bar with weather data.
     _onWeatherUpdate = (update) => {
         this.setState({
             weatherDisplay: update.display,
@@ -109,10 +115,12 @@ class App extends PureComponent {
         })
     }
 
+    // Handle updates about the state of the backend.
     _onBackendUpdate = (update) => {
         this.setState({ backendMuted: update.muted })
     }
 
+    // Update the music bar.
     _onMusicPlayerUpdate = (update) => {
         this.musicActive =
             update.player_state == "playing" || update.player_state == "paused"
@@ -123,6 +131,7 @@ class App extends PureComponent {
         })
     }
 
+    // Add new messages to the message list.
     _onNewMessages = (update) => {
         let state = this.state
         Object.assign(state.unseenMessages, update)
@@ -134,6 +143,7 @@ class App extends PureComponent {
         })
     }
 
+    // Remove certain messages from the message list.
     _onSeenMessages = (update) => {
         let state = this.state
         for (let seen of update) {
@@ -145,6 +155,7 @@ class App extends PureComponent {
         this.setState({ updatedUnseen: !state.updatedUnseen })
     }
 
+    // Update the current unread messages.
     _onUnseenMessages = (update) => {
         this.numUnseen = Object.keys(update).length
         this.numHistory = 0
@@ -155,12 +166,15 @@ class App extends PureComponent {
         })
     }
 
+    // Callback for clicking the mute button.
     _toggleMute = () => {
         if ((this.state.wsState = WS_CONNECTED)) {
-            this.ws.send(JSON.stringify({ toggle_mute: true }))
+            this._send({ toggle_mute: true })
         }
     }
 
+    // Callback for clicking the message button (displays history or marks
+    // messages read.)
     _messageButtonClick = () => {
         let state = this.state
         if (this.numHistory) {
@@ -188,6 +202,7 @@ class App extends PureComponent {
         this._setupWebsocket()
     }
 
+    // Set the status text.
     setStatusText = (text, style = null) => {
         this.setState({
             updatedStatusText: !this.state.updatedStatusText,

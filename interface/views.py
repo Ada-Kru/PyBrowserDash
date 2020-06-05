@@ -32,6 +32,7 @@ MAX_REPEAT_DELAY = 300
 
 @gzip_page
 def index(request):
+    """Handle the index page."""
     if ip_address(get_client_ip(request)).is_global:
         return HttpResponseBadRequest("")
 
@@ -43,17 +44,21 @@ def index(request):
 @csrf_exempt
 @ratelimit(key="ip", rate="15/m")
 def messages_new(request):
+    """Process incoming messages."""
     if request.method != "POST":
         return HttpResponseBadRequest("GET not allowed.")
     if getattr(request, "limited", False):
         return HttpResponseForbidden("Rate limited")
 
     try:
+        # Get the background tasks object in order ot communicate with the
+        # asynchronous background tasks.
         bg = request.scope["background_tasks"]
         msg = loads(request.body)
         new_msg_validator(msg)
         clean_message(msg)
 
+        # Save message to database.
         if msg["alert_type"] != MESSAGE_TYPES["speak_only"]:
             Message(
                 sender=msg["sender"],
@@ -67,6 +72,7 @@ def messages_new(request):
                 bg.unseen[msg_id] = msg
                 bg.send_all_websockets({"new_msg": {msg_id: msg}})
 
+        # Speak message out loud.
         if msg["tts"]:
             speak_msg(msg, bg)
 
@@ -77,6 +83,7 @@ def messages_new(request):
 
 
 def speak_msg(msg, bg_tasks):
+    """Speak message out loud."""
     bg = bg_tasks
     do_speak = True
     if msg["alert_type"] == MESSAGE_TYPES["delayed_repeat"]:
@@ -100,6 +107,7 @@ def speak_msg(msg, bg_tasks):
 @gzip_page
 @csrf_exempt
 def messages_unseen(request):
+    """Get mark certain messages as read and get other unread messages."""
     bg = request.scope["background_tasks"]
     if request.method == "POST":
         try:
@@ -117,6 +125,7 @@ def messages_unseen(request):
 
 @csrf_exempt
 def messages_clear_unseen(request):
+    """Clear all unread messages."""
     bg = request.scope["background_tasks"]
     if request.method == "POST":
         bg.unseen.clear()
@@ -129,7 +138,8 @@ def messages_clear_unseen(request):
 
 
 @gzip_page
-def messages_history(request, limit):
+def messages_history(request, limit=100):
+    """Get the most recent messages from the database up to a limit."""
     db_messages = Message.objects.order_by("time")[:limit]
     messages, counter = {}, 0
     global_ip = ip_address(get_client_ip(request)).is_global
@@ -150,6 +160,7 @@ def messages_history(request, limit):
 
 
 def wake_on_lan(request):
+    """Run an external wak on lan script."""
     now = (
         datetime.utcnow()
         .replace(microsecond=0, tzinfo=timezone.utc)

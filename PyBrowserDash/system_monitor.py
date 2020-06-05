@@ -3,7 +3,7 @@ from asyncio import sleep
 
 
 class SystemMonitor:
-    """Retreive system status."""
+    """Retreive system status (CPU usage, RAM, Network usage, etc.)."""
 
     def __init__(self, bg_tasks):
         self._bg_tasks = bg_tasks
@@ -39,11 +39,11 @@ class SystemMonitor:
         """Generate formatted system status text."""
         return (
             f"CPU: {self._prev_cpu: >2}% RAM: {self._prev_ram: >2}G  ▬▬  "
-            f"NET: {self._prev_k_bytes_recv:4d}K"
+            f"NET: {self._prev_k_bytes_recv:5d}K"
         )
 
     async def run(self):
-        """Send system status to clients forever."""
+        """Send system status to clients every second."""
         while True:
             if self.get_computer_status():
                 msg = {"sys": self.make_status_text()}
