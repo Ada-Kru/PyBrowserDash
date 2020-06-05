@@ -59,11 +59,11 @@ class WeatherChecker:
                 "humidity": p["relativeHumidity"]["value"],
                 "pressure": p["barometricPressure"]["value"],
                 "desc": p["textDescription"],
-                "last_update": datetime.now().strftime("%-H:%M"),
+                "last_update": datetime.now().strftime("%H:%M").lstrip("0"),
             }
             self.current_weather = weather
         except (ValueError, TypeError, Exception) as err:
-            print(err)
+            print("Error reading values from weather JSON: ", err)
             return
 
     def make_update(self):
@@ -78,25 +78,23 @@ class WeatherChecker:
         # v = current reading.
         cw = self.current_weather
         v = cw["temp"]
-        temp = f"{convert_temp(v)}" if v is not None else "-"
+        temp = "-" if v is None else f"{convert_temp(v)}"
         v = cw["wind_speed"]
         wspeed = 0 if v is None else int(v * 2.237)
         v = cw["wind_dir"]
-        wind_dir = f" {degrees_to_direction(v)}" if v is not None else ""
+        wdir = "" if v is None else f" {degrees_to_direction(v)}"
         v = cw["wind_gust"]
         gust = "" if not v else f"Gust: {int(v * 2.237)} Mph "
         v = cw["heat"]
-        heat = f"Heat Index: {convert_temp(v)}°F\n" if v is not None else ""
+        heat = "" if v is None else f"Heat Index: {convert_temp(v)}°F\n"
         v = cw["chill"]
-        chill = f"Wind Chill: {convert_temp(v)}°F\n" if v is not None else ""
+        chill = "" if v is None else f"Wind Chill: {convert_temp(v)}°F\n"
         v = cw["pressure"]
-        press = f"Pressure: {int(v / 100)} hPa\n" if v is not None else ""
+        press = "" if v is None else f"Pressure: {int(v / 100)} hPa\n"
         v = cw["humidity"]
-        hum = f"Humidity: {int(v)}%" if v is not None else ""
+        hum = "" if v is None else f"Humidity: {int(v)}%"
         return {
-            "display": (
-                f"{temp}°F ▬ {wspeed} Mph {gust}{wind_dir} ▬ {cw['desc']}"
-            ),
+            "display": f"{temp}°F ▬ {wspeed} Mph {gust}{wdir} ▬ {cw['desc']}",
             "tooltip": (
                 f"Last updated: {cw['last_update']}\n{heat}{chill}{press}{hum}"
             ),
