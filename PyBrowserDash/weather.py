@@ -82,9 +82,9 @@ class WeatherChecker:
         v = cw["wind_speed"]
         wspeed = 0 if v is None else int(v * 2.237)
         v = cw["wind_dir"]
-        wdir = "" if v is None else f" {degrees_to_direction(v)}"
+        wdir = "" if v is None else f"{degrees_to_direction(v)}"
         v = cw["wind_gust"]
-        gust = "" if not v else f"Gust: {int(v * 2.237)} Mph "
+        gust = "" if not v else f" Gust: {int(v * 2.237)} Mph "
         v = cw["heat"]
         heat = "" if v is None else f"Heat Index: {convert_temp(v)}°F\n"
         v = cw["chill"]
@@ -94,7 +94,7 @@ class WeatherChecker:
         v = cw["humidity"]
         hum = "" if v is None else f"Humidity: {int(v)}%"
         return {
-            "display": f"{temp}°F ▬ {wspeed} Mph {gust}{wdir} ▬ {cw['desc']}",
+            "display": f"{temp}°F ▬ {wspeed} Mph{gust} {wdir} ▬ {cw['desc']}",
             "tooltip": (
                 f"Last updated: {cw['last_update']}\n{heat}{chill}{press}{hum}"
             ),
