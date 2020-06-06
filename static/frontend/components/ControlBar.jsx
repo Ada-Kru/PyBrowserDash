@@ -32,11 +32,11 @@ class ControlBar extends PureComponent {
                 >
                     {state.displayed ? "Close Messages" : "History"}
                 </button>
-                <span className="spacer"></span>
+                <span className="controlSpacer"></span>
                 <button
                     id="muteButton"
                     className={
-                        "toggleButton" +
+                        "controlButton" +
                         (state.backendMuted ? " activated" : "")
                     }
                     onClick={this.props.toggleMute}

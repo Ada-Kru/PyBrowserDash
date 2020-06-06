@@ -1,5 +1,4 @@
-html,
-body {
+%interface {
     height: 100%;
     padding: 0;
     margin: 0;
@@ -7,7 +6,12 @@ body {
     text-shadow: 1px 1px #000;
 }
 
+html {
+    @extend %interface;
+}
+
 body {
+    @extend %interface;
     display: flex;
     flex-direction: column;
     background-color: black;
@@ -19,7 +23,7 @@ body {
     background-color: #808f80;
 }
 
-#mainInterface {
+#interfaceArea {
     width: 100%;
     height: 100%;
     display: flex;
@@ -31,15 +35,8 @@ body {
     );
 }
 
-span.spacer {
+.controlSpacer {
     padding: 0px 10px;
-}
-
-span.expandElement {
-    color: #ddd;
-    cursor: pointer;
-    text-shadow: 1px 1px 0px #555;
-    padding-right: 5px;
 }
 
 #modules {
@@ -55,8 +52,7 @@ span.expandElement {
     border-top: 1px solid #555;
 }
 
-button.controlButton,
-button.toggleButton {
+.controlButton {
     color: #ffffff;
     background-color: #444;
     white-space: nowrap;
@@ -67,20 +63,13 @@ button.toggleButton {
     height: 26px;
     margin: 2px 2px 3px 2px;
     flex-basis: 75px;
-}
-
-button.controlButton:hover,
-button.toggleButton:hover {
-    color: #55ff55;
-}
-
-button.toggleButton.activated {
-    color: #ffff00;
-    font-weight: bold;
-}
-
-button.toggleButton.red {
-    background-color: #ff0000;
+    &:hover {
+        color: #55ff55;
+    }
+    &.activated {
+        color: #ffff00;
+        font-weight: bold;
+    }
 }
 
 #messagesButton {
@@ -100,13 +89,13 @@ button.toggleButton.red {
     font-size: 13px;
 }
 
-span.musicTimes {
+.musicTimes {
     padding: 3px 2px;
     margin-left: 2px;
     margin-right: 2px;
 }
 
-#musicProgressBar {
+.greenProgressBar {
     background-color: #222;
     height: 19px;
     border-top: 1px solid #111;
@@ -114,19 +103,14 @@ span.musicTimes {
     border-bottom: 1px solid #666;
     border-right: 1px solid #666;
     flex-grow: 2;
-}
-
-#musicProgressBar::-moz-progress-bar {
-    animation: none;
-    background-color: #808f80;
-    border-top: 1px solid #aaa;
-    border-left: 1px solid #aaa;
-    border-bottom: 1px solid #444;
-    border-right: 1px solid #444;
-}
-
-#musicProgressBar[value="0"]::-moz-progress-bar {
-    border: none;
+    &:-moz-progress-bar {
+        animation: none;
+        background-color: #808f80;
+        border-top: 1px solid #aaa;
+        border-left: 1px solid #aaa;
+        border-bottom: 1px solid #444;
+        border-right: 1px solid #444;
+    }
 }
 
 #musicTitle {
@@ -167,7 +151,7 @@ span.musicTimes {
     margin-top: -1px;
 }
 
-#statusStats, #statusWeather {
+%statusInfo {
     white-space: pre-wrap;
     font-family: monospace;
     padding: 0px 4px;
@@ -179,8 +163,14 @@ span.musicTimes {
     cursor: default;
 }
 
+#statusStats {
+    @extend %statusInfo;
+}
+
 #statusWeather {
+    @extend %statusInfo;
     margin-right: 10px;
+    color: #c0e7eb;
 }
 
 #msgTable {
@@ -205,32 +195,35 @@ span.musicTimes {
 .msgRow {
     width: 100%;
     display: inline-table;
+    &:hover {
+        background-color: #282828;
+    }
 }
 
-.msgRow:hover {
-    background-color: #282828;
+%messageColumn {
+    word-wrap: break-word;
 }
 
 .seenCol {
+    @extend %messageColumn;
     width: 5%;
     text-align: center;
-    word-wrap: break-word;
     border-right: 1px solid #222;
 }
 
 .timeCol {
+    @extend %messageColumn;
     width: 20%;
-    word-wrap: break-word;
 }
 
 .senderCol {
+    @extend %messageColumn;
     width: 15%;
-    word-wrap: break-word;
 }
 
 .msgCol {
+    @extend %messageColumn;
     width: 60%;
-    word-wrap: break-word;
 }
 
 #msgTableBody {

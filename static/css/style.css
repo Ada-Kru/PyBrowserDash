@@ -1,5 +1,4 @@
-html,
-body {
+html, body {
   height: 100%;
   padding: 0;
   margin: 0;
@@ -16,21 +15,15 @@ body {
   color: #fff;
   background-color: #808f80; }
 
-#mainInterface {
+#interfaceArea {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column-reverse;
   background: linear-gradient(180deg, black 0%, #191919 100%); }
 
-span.spacer {
+.controlSpacer {
   padding: 0px 10px; }
-
-span.expandElement {
-  color: #ddd;
-  cursor: pointer;
-  text-shadow: 1px 1px 0px #555;
-  padding-right: 5px; }
 
 #modules {
   background-color: #444; }
@@ -42,8 +35,7 @@ span.expandElement {
   justify-content: space-between;
   border-top: 1px solid #555; }
 
-button.controlButton,
-button.toggleButton {
+.controlButton {
   color: #ffffff;
   background-color: #444;
   white-space: nowrap;
@@ -54,17 +46,11 @@ button.toggleButton {
   height: 26px;
   margin: 2px 2px 3px 2px;
   flex-basis: 75px; }
-
-button.controlButton:hover,
-button.toggleButton:hover {
-  color: #55ff55; }
-
-button.toggleButton.activated {
-  color: #ffff00;
-  font-weight: bold; }
-
-button.toggleButton.red {
-  background-color: #ff0000; }
+  .controlButton:hover {
+    color: #55ff55; }
+  .controlButton.activated {
+    color: #ffff00;
+    font-weight: bold; }
 
 #messagesButton {
   flex-grow: 2; }
@@ -81,12 +67,12 @@ button.toggleButton.red {
   padding-bottom: 1px;
   font-size: 13px; }
 
-span.musicTimes {
+.musicTimes {
   padding: 3px 2px;
   margin-left: 2px;
   margin-right: 2px; }
 
-#musicProgressBar {
+.greenProgressBar {
   background-color: #222;
   height: 19px;
   border-top: 1px solid #111;
@@ -94,17 +80,13 @@ span.musicTimes {
   border-bottom: 1px solid #666;
   border-right: 1px solid #666;
   flex-grow: 2; }
-
-#musicProgressBar::-moz-progress-bar {
-  animation: none;
-  background-color: #808f80;
-  border-top: 1px solid #aaa;
-  border-left: 1px solid #aaa;
-  border-bottom: 1px solid #444;
-  border-right: 1px solid #444; }
-
-#musicProgressBar[value="0"]::-moz-progress-bar {
-  border: none; }
+  .greenProgressBar:-moz-progress-bar {
+    animation: none;
+    background-color: #808f80;
+    border-top: 1px solid #aaa;
+    border-left: 1px solid #aaa;
+    border-bottom: 1px solid #444;
+    border-right: 1px solid #444; }
 
 #musicTitle {
   position: absolute;
@@ -140,7 +122,7 @@ span.musicTimes {
   padding-bottom: 1px;
   margin-top: -1px; }
 
-#statusWeather {
+#statusStats, #statusWeather {
   white-space: pre-wrap;
   font-family: monospace;
   padding: 0px 4px;
@@ -148,16 +130,12 @@ span.musicTimes {
   border-left: 1px solid #333;
   border-bottom: 1px solid #888;
   border-right: 1px solid #888;
-  margin-right: 10px; }
+  user-select: none;
+  cursor: default; }
 
-#statusStats {
-  white-space: pre-wrap;
-  font-family: monospace;
-  padding: 0px 4px;
-  border-top: 1px solid #333;
-  border-left: 1px solid #333;
-  border-bottom: 1px solid #888;
-  border-right: 1px solid #888; }
+#statusWeather {
+  margin-right: 10px;
+  color: #c0e7eb; }
 
 #msgTable {
   width: 100%;
@@ -178,27 +156,25 @@ span.musicTimes {
 .msgRow {
   width: 100%;
   display: inline-table; }
+  .msgRow:hover {
+    background-color: #282828; }
 
-.msgRow:hover {
-  background-color: #282828; }
+.seenCol, .timeCol, .senderCol, .msgCol {
+  word-wrap: break-word; }
 
 .seenCol {
   width: 5%;
   text-align: center;
-  word-wrap: break-word;
   border-right: 1px solid #222; }
 
 .timeCol {
-  width: 20%;
-  word-wrap: break-word; }
+  width: 20%; }
 
 .senderCol {
-  width: 15%;
-  word-wrap: break-word; }
+  width: 15%; }
 
 .msgCol {
-  width: 60%;
-  word-wrap: break-word; }
+  width: 60%; }
 
 #msgTableBody {
   display: block;

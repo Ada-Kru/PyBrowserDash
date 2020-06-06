@@ -99,6 +99,7 @@ class MusicBar extends PureComponent {
                 </span>
                 <progress
                     id="musicProgressBar"
+                    className="greenProgressBar"
                     value={state.position}
                     max={state.length}
                 ></progress>

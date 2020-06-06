@@ -215,7 +215,7 @@ class App extends PureComponent {
         let state = this.state
         let msgs = this.numUnseen ? state.unseenMessages : state.messageHistory
         return (
-            <div id="mainInterface">
+            <div id="interfaceArea">
                 <div id="modules">
                     <ControlBar
                         backendMuted={state.backendMuted}
