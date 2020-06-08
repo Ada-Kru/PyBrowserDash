@@ -47,7 +47,7 @@ class StatusBar extends PureComponent {
         let wdir = degToDir(w.wind_dir)
         let gust = w.wind_gust == null ? 0 : parseInt(w.wind_gust * 2.237)
         return (
-            <span>
+            <span id="statusWeather" title={this.makeWeatherTooltip()}>
                 <span className={tempClass}>{`${temp}°F`}</span>
                 {` ▬ ${wspd}${gust ? "-" + gust : ""} Mph ${wdir} ▬ ${w.desc}`}
             </span>
@@ -61,10 +61,6 @@ class StatusBar extends PureComponent {
 
         let w = this.state.weatherData
         let press = w.pressure
-        // let heat = w.heat == null ? "-" : `${convertTemp(w.heat)}`
-        // let chill = w.chill == null ? "-" : `${convertTemp(w.chill)}`
-        // let pres = w.pressure == null ? "-" : `${parseInt(w.pressure / 100)}`
-        // let hum = w.humidity == null ? "-" : `${parseInt(w.humidity)}`
         return (
             `Last Updated: ${w.last_update}\n` +
             (w.heat == null ? "" : `Heat Index: ${convertTemp(w.heat)}\n`) +
@@ -82,9 +78,7 @@ class StatusBar extends PureComponent {
                     {state.statusText}
                 </span>
                 <div className="statusSpansHolder">
-                    <span id="statusWeather" title={this.makeWeatherTooltip()}>
-                        {this.makeWeatherSpan()}
-                    </span>
+                    {this.makeWeatherSpan()}
                     <span id="statusStats">{state.statusStats}</span>
                 </div>
             </div>
