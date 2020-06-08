@@ -10,7 +10,7 @@ const WS_CONNECTED = 2
 const STATUS_NORMAL_STYLE = { color: "white" }
 const STATUS_ERROR_STYLE = { color: "red" }
 const STATS_NOT_LOADED_MSG = "System stats not loaded"
-const WEATHER_NOT_LOADED = "Weather info not loaded"
+const WEATHER_NOT_LOADED = { loaded: false }
 
 class App extends PureComponent {
     constructor(props) {
@@ -20,8 +20,7 @@ class App extends PureComponent {
             wsState: WS_DISCONNECTED,
             statusText: "Backend disconnected",
             statusStyle: STATUS_ERROR_STYLE,
-            weatherDisplay: WEATHER_NOT_LOADED,
-            weatherTooltip: WEATHER_NOT_LOADED,
+            weatherData: WEATHER_NOT_LOADED,
             statusStats: STATS_NOT_LOADED_MSG,
             updatedStatusText: false,
             updatedStatsOnly: false,
@@ -80,7 +79,7 @@ class App extends PureComponent {
             this.setState({
                 wsState: WS_DISCONNECTED,
                 statusStats: STATS_NOT_LOADED_MSG,
-                statusWeather: WEATHER_NOT_LOADED,
+                weatherData: WEATHER_NOT_LOADED,
             })
             this.setStatusText("Backend disconnected", STATUS_ERROR_STYLE)
             setTimeout(() => this._setupWebsocket(), 1000)
@@ -109,8 +108,7 @@ class App extends PureComponent {
     // Update the status bar with weather data.
     _onWeatherUpdate = (update) => {
         this.setState({
-            weatherDisplay: update.display,
-            weatherTooltip: update.tooltip,
+            weatherData: update,
             updatedStatusText: !this.state.updatedStatusText,
         })
     }
@@ -241,9 +239,8 @@ class App extends PureComponent {
                         updatedStatsOnly={state.updatedStatsOnly}
                         statusText={state.statusText}
                         statusStyle={state.statusStyle}
-                        weatherDisplay={state.weatherDisplay}
-                        weatherTooltip={state.weatherTooltip}
                         statusStats={state.statusStats}
+                        weatherData={state.weatherData}
                     ></StatusBar>
                 </div>
             </div>

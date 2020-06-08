@@ -170,7 +170,19 @@ body {
 #statusWeather {
     @extend %statusInfo;
     margin-right: 10px;
-    color: #c0e7eb;
+    color: #e0ffec;
+}
+
+.tempNormal {
+    color: #dfd;
+}
+
+.tempHot {
+    color: #ffe0b8;
+}
+
+.tempCold {
+    color: #b8fff8;
 }
 
 #msgTable {
@@ -228,7 +240,7 @@ body {
 
 #msgTableBody {
     display: block;
-    max-height: 50vh;
+    max-height: 33vh;
     width: 100%;
     overflow-y: auto;
 }

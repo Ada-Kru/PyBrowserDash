@@ -50,6 +50,7 @@ class WeatherChecker:
                 return
 
             weather = {
+                "loaded": True,
                 "temp": temp,
                 "heat": p["heatIndex"]["value"],
                 "chill": p["windChill"]["value"],
@@ -68,37 +69,36 @@ class WeatherChecker:
 
     def make_update(self):
         """Make an dict of strings with the current weather data."""
-        if self.current_weather is None:
-            return {
-                "display": "Weather info not loaded",
-                "tooltip": "Weather info not loaded",
-            }
+        if self.current_weather is not None:
+            return self.current_weather
+        else:
+            return {"loaded": False}
 
         # Convert weather readings to strings.  Handles null readings.
         # v = current reading.
-        cw = self.current_weather
-        v = cw["temp"]
-        temp = "-" if v is None else f"{convert_temp(v)}"
-        v = cw["wind_speed"]
-        wspeed = 0 if v is None else int(v * 2.237)
-        v = cw["wind_dir"]
-        wdir = "" if v is None else f"{degrees_to_direction(v)}"
-        v = cw["wind_gust"]
-        gust = "" if not v else f" Gust: {int(v * 2.237)} Mph "
-        v = cw["heat"]
-        heat = "" if v is None else f"Heat Index: {convert_temp(v)}°F\n"
-        v = cw["chill"]
-        chill = "" if v is None else f"Wind Chill: {convert_temp(v)}°F\n"
-        v = cw["pressure"]
-        press = "" if v is None else f"Pressure: {int(v / 100)} hPa\n"
-        v = cw["humidity"]
-        hum = "" if v is None else f"Humidity: {int(v)}%"
-        return {
-            "display": f"{temp}°F ▬ {wspeed} Mph{gust} {wdir} ▬ {cw['desc']}",
-            "tooltip": (
-                f"Last updated: {cw['last_update']}\n{heat}{chill}{press}{hum}"
-            ),
-        }
+        # cw = self.current_weather
+        # v = cw["temp"]
+        # temp = "-" if v is None else f"{convert_temp(v)}"
+        # v = cw["wind_speed"]
+        # wspeed = 0 if v is None else int(v * 2.237)
+        # v = cw["wind_dir"]
+        # wdir = "" if v is None else f"{degrees_to_direction(v)}"
+        # v = cw["wind_gust"]
+        # gust = "" if not v else f" Gust: {int(v * 2.237)} Mph "
+        # v = cw["heat"]
+        # heat = "" if v is None else f"Heat Index: {convert_temp(v)}°F\n"
+        # v = cw["chill"]
+        # chill = "" if v is None else f"Wind Chill: {convert_temp(v)}°F\n"
+        # v = cw["pressure"]
+        # press = "" if v is None else f"Pressure: {int(v / 100)} hPa\n"
+        # v = cw["humidity"]
+        # hum = "" if v is None else f"Humidity: {int(v)}%"
+        # return {
+        #     "display": f"{temp}°F ▬ {wspeed} Mph{gust} {wdir} ▬ {cw['desc']}",
+        #     "tooltip": (
+        #         f"Last updated: {cw['last_update']}\n{heat}{chill}{press}{hum}"
+        #     ),
+        # }
 
     def _update_clients(self):
         """Update clients with new weather information."""
