@@ -1,5 +1,7 @@
 import React, { PureComponent } from "react"
 
+const SYS_STATS_NOT_LOADED_MSG = "System stats not loaded."
+
 class StatusBar extends PureComponent {
     constructor(props) {
         super(props)
@@ -30,17 +32,21 @@ class StatusBar extends PureComponent {
 
     makeWeatherSpan = () => {
         if (this.state.weatherData.loaded == false) {
-            return "Weather data not loaded."
+            return (
+                <span id="statusWeather" title={this.makeWeatherTooltip()}>
+                    "Weather data not loaded."
+                </span>
+            )
         }
 
         let w = this.state.weatherData
         let temp = w.temp == null ? "-" : convertTemp(w.temp)
-        let tempClass = "tempNormal"
+        let tempClass = "statNormal"
         if (w.temp != null) {
             if (temp >= 85) {
-                tempClass = "tempHot"
+                tempClass = "statHigh"
             } else if (temp <= 63) {
-                tempClass = "tempCold"
+                tempClass = "statLow"
             }
         }
         let wspd = w.wind_speed == null ? 0 : parseInt(w.wind_speed * 2.237)
@@ -70,6 +76,41 @@ class StatusBar extends PureComponent {
         )
     }
 
+    makeSystemStats = () => {
+        let stats = this.state.statusStats
+        if (stats.cpu == null) {
+            return <span id="statusStats">{SYS_STATS_NOT_LOADED_MSG}</span>
+        }
+
+        let cpuClass = ""
+        if (stats.cpu >= 75) {
+            cpuClass = "statRed"
+        } else if (stats.cpu >= 25) {
+            cpuClass = "statHigh"
+        }
+
+        let ramClass = ""
+        let ramPct = (stats.ram_used / stats.ram_total) * 100
+        if (ramPct >= 75) {
+            ramClass = "statRed"
+        } else if (ramPct >= 50) {
+            ramClass = "statHigh"
+        }
+
+        let n = stats.net
+
+        return (
+            <span id="statusStats">
+                CPU:
+                <span className={cpuClass}>
+                    {("     " + stats.cpu).slice(-4)}
+                </span>
+                % RAM: <span className={ramClass}>{stats.ram_used}</span>G ▬▬
+                NET: {n <= 99999 ? ("     " + n).slice(-5) : n}K
+            </span>
+        )
+    }
+
     render() {
         let state = this.state
         return (
@@ -79,7 +120,7 @@ class StatusBar extends PureComponent {
                 </span>
                 <div className="statusSpansHolder">
                     {this.makeWeatherSpan()}
-                    <span id="statusStats">{state.statusStats}</span>
+                    {this.makeSystemStats()}
                 </div>
             </div>
         )

@@ -7,6 +7,7 @@ class SystemMonitor:
 
     def __init__(self, bg_tasks):
         self._bg_tasks = bg_tasks
+        self._total_memory = int(round((virtmem().total) / 1073741824, 1))
         self._prev_bytes_recv = 0
         self._prev_k_bytes_recv = 0
         self._prev_cpu = 0
@@ -21,7 +22,8 @@ class SystemMonitor:
             info_changed = True
         self._prev_cpu = cpu
 
-        ram = round((virtmem().total - virtmem().available) / 1073741824, 1)
+        vm = virtmem()
+        ram = round((vm.total - vm.available) / 1073741824, 1)
         if ram != self._prev_ram:
             info_changed = True
         self._prev_ram = ram
@@ -37,10 +39,16 @@ class SystemMonitor:
 
     def make_status_text(self):
         """Generate formatted system status text."""
-        return (
-            f"CPU: {self._prev_cpu: >2}% RAM: {self._prev_ram: >2}G  ▬▬  "
-            f"NET: {self._prev_k_bytes_recv:5d}K"
-        )
+        return {
+            "cpu": self._prev_cpu,
+            "ram_used": self._prev_ram,
+            "ram_total": self._total_memory,
+            "net": self._prev_k_bytes_recv,
+        }
+        # return (
+        #     f"CPU: {self._prev_cpu: >2}% RAM: {self._prev_ram: >2}G  ▬▬  "
+        #     f"NET: {self._prev_k_bytes_recv:5d}K"
+        # )
 
     async def run(self):
         """Send system status to clients every second."""

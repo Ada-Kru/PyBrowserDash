@@ -9,7 +9,7 @@ const WS_CONNECTING = 1
 const WS_CONNECTED = 2
 const STATUS_NORMAL_STYLE = { color: "white" }
 const STATUS_ERROR_STYLE = { color: "red" }
-const STATS_NOT_LOADED_MSG = "System stats not loaded"
+const STATS_NOT_LOADED = { cpu: null }
 const WEATHER_NOT_LOADED = { loaded: false }
 
 class App extends PureComponent {
@@ -21,7 +21,7 @@ class App extends PureComponent {
             statusText: "Backend disconnected",
             statusStyle: STATUS_ERROR_STYLE,
             weatherData: WEATHER_NOT_LOADED,
-            statusStats: STATS_NOT_LOADED_MSG,
+            statusStats: STATS_NOT_LOADED,
             updatedStatusText: false,
             updatedStatsOnly: false,
             musicStatus: "disconnected",
@@ -78,7 +78,7 @@ class App extends PureComponent {
         this.ws.onclose = (evt) => {
             this.setState({
                 wsState: WS_DISCONNECTED,
-                statusStats: STATS_NOT_LOADED_MSG,
+                statusStats: STATS_NOT_LOADED,
                 weatherData: WEATHER_NOT_LOADED,
             })
             this.setStatusText("Backend disconnected", STATUS_ERROR_STYLE)

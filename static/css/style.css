@@ -137,13 +137,19 @@ body {
   margin-right: 10px;
   color: #e0ffec; }
 
-.tempNormal {
+.statNormal {
   color: #dfd; }
 
-.tempHot {
+.statHigh {
   color: #ffe0b8; }
 
-.tempCold {
+.statRed {
+  color: #faa; }
+
+.statMed {
+  color: #fbf5d5; }
+
+.statLow {
   color: #b8fff8; }
 
 #msgTable {
