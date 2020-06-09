@@ -105,8 +105,9 @@ class StatusBar extends PureComponent {
                 <span className={cpuClass}>
                     {("     " + stats.cpu).slice(-4)}
                 </span>
-                % RAM: <span className={ramClass}>{stats.ram_used}</span>G ▬▬
-                NET: {n <= 99999 ? ("     " + n).slice(-5) : n}K
+                % RAM:{" "}
+                <span className={ramClass}>{stats.ram_used.toFixed(1)}</span>G
+                ▬▬ NET: {n <= 99999 ? ("     " + n).slice(-5) : n}K
             </span>
         )
     }
