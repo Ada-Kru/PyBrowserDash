@@ -80,7 +80,7 @@ body {
   border-bottom: 1px solid #666;
   border-right: 1px solid #666;
   flex-grow: 2; }
-  .greenProgressBar:-moz-progress-bar {
+  .greenProgressBar::-moz-progress-bar {
     animation: none;
     background-color: #808f80;
     border-top: 1px solid #aaa;
