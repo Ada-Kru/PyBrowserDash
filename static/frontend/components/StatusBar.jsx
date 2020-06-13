@@ -49,9 +49,12 @@ class StatusBar extends PureComponent {
                 tempClass = "statLow"
             }
         }
-        let wspd = w.wind_speed == null ? 0 : parseInt(w.wind_speed * 2.237)
-        let wdir = degToDir(w.wind_dir)
         let gust = w.wind_gust == null ? 0 : parseInt(w.wind_gust * 2.237)
+        let wspd = w.wind_speed == null ? 0 : parseInt(w.wind_speed * 2.237)
+        if (w.wind_speed == null && w.wind_gust != null) {
+            wspd = Math.max(wspd, parseInt(gust / 2))
+        }
+        let wdir = degToDir(w.wind_dir)
         return (
             <span id="statusWeather" title={this.makeWeatherTooltip()}>
                 <span className={tempClass}>{`${temp}°F`}</span>
