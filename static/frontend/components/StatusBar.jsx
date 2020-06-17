@@ -49,8 +49,8 @@ class StatusBar extends PureComponent {
                 tempClass = "statLow"
             }
         }
-        let gust = w.wind_gust == null ? 0 : parseInt(w.wind_gust * 2.237)
-        let wspd = w.wind_speed == null ? 0 : parseInt(w.wind_speed * 2.237)
+        let gust = w.wind_gust == null ? 0 : parseInt(w.wind_gust * 0.621371)
+        let wspd = w.wind_speed == null ? 0 : parseInt(w.wind_speed * 0.621371)
         if (w.wind_speed == null && w.wind_gust != null) {
             wspd = Math.max(wspd, parseInt(gust / 2))
         }

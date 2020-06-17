@@ -1,5 +1,5 @@
 from asyncio import create_task, sleep, CancelledError
-from aiohttp import ClientSession, ClientError
+from aiohttp import ClientSession, ClientError, ContentTypeError
 from datetime import datetime
 
 try:
@@ -33,7 +33,7 @@ class WeatherChecker:
                         async with session.get(WEATHER_ENDPOINT) as resp:
                             self._update_data(await resp.json())
                             self._update_clients()
-                    except ClientError as err:
+                    except (ClientError, ContentTypeError) as err:
                         print(err)
                     await sleep(60 * 30)
         except CancelledError:
