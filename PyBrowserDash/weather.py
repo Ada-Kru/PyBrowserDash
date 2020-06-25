@@ -60,7 +60,8 @@ class WeatherChecker:
                 "humidity": p["relativeHumidity"]["value"],
                 "pressure": p["barometricPressure"]["value"],
                 "desc": p["textDescription"],
-                "last_update": datetime.now().strftime("%H:%M").lstrip("0"),
+                "last_updated": p["timestamp"],
+                "retrieved_time": datetime.now().strftime("%H:%M").lstrip("0"),
             }
             self.current_weather = weather
         except (ValueError, TypeError, Exception) as err:

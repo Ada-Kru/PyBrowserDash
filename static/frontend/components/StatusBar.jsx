@@ -1,6 +1,8 @@
 import React, { PureComponent } from "react"
+import moment from "moment-mini"
 
 const SYS_STATS_NOT_LOADED_MSG = "System stats not loaded."
+const DATE_FORMAT = "ddd D, H:mm"
 
 class StatusBar extends PureComponent {
     constructor(props) {
@@ -55,10 +57,14 @@ class StatusBar extends PureComponent {
             wspd = Math.max(wspd, parseInt(gust / 2))
         }
         let wdir = degToDir(w.wind_dir)
+        let dataTime = moment(w.last_updated)
+        let startTime = moment().subtract(1.5, "hours")
+        let isOldData = dataTime.isSameOrBefore(startTime) ? " 🕓" : ""
         return (
             <span id="statusWeather" title={this.makeWeatherTooltip()}>
                 <span className={tempClass}>{`${temp}°F`}</span>
-                {` ▬ ${wspd}${gust ? "-" + gust : ""} Mph ${wdir} ▬ ${w.desc}`}
+                {` ▬ ${wspd}${gust ? "-" + gust : ""} Mph ` +
+                    `${wdir} ▬ ${w.desc}${isOldData}`}
             </span>
         )
     }
@@ -71,7 +77,8 @@ class StatusBar extends PureComponent {
         let w = this.state.weatherData
         let press = w.pressure
         return (
-            `Last Updated: ${w.last_update}\n` +
+            `Retrieved at: ${w.retrieved_time}\n` +
+            `Data timestamp: ${moment(w.last_updated).format(DATE_FORMAT)}\n` +
             (w.heat == null ? "" : `Heat Index: ${convertTemp(w.heat)}\n`) +
             (w.chill == null ? "" : `Wind Chill: ${convertTemp(w.chill)}\n`) +
             (press == null ? "" : `Pressure: ${parseInt(press / 100)}\n`) +
