@@ -2,7 +2,6 @@ import React, { PureComponent } from "react"
 import moment from "moment-mini"
 
 const SYS_STATS_NOT_LOADED_MSG = "System stats not loaded."
-const DATE_FORMAT = "ddd D, H:mm"
 
 class StatusBar extends PureComponent {
     constructor(props) {
@@ -58,7 +57,7 @@ class StatusBar extends PureComponent {
         }
         let wdir = degToDir(w.wind_dir)
         let dataTime = moment(w.last_updated)
-        let startTime = moment().subtract(1.5, "hours")
+        let startTime = moment().subtract(2, "hours")
         let isOldData = dataTime.isSameOrBefore(startTime) ? " 🕓" : ""
         return (
             <span id="statusWeather" title={this.makeWeatherTooltip()}>
@@ -78,7 +77,7 @@ class StatusBar extends PureComponent {
         let press = w.pressure
         return (
             `Retrieved at: ${w.retrieved_time}\n` +
-            `Data timestamp: ${moment(w.last_updated).format(DATE_FORMAT)}\n` +
+            `Data timestamp: ${moment(w.last_updated).format("H:mm")}\n` +
             (w.heat == null ? "" : `Heat Index: ${convertTemp(w.heat)}\n`) +
             (w.chill == null ? "" : `Wind Chill: ${convertTemp(w.chill)}\n`) +
             (press == null ? "" : `Pressure: ${parseInt(press / 100)}\n`) +
