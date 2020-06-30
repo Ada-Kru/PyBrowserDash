@@ -140,7 +140,7 @@ def messages_clear_unseen(request):
 @gzip_page
 def messages_history(request, limit=100):
     """Get the most recent messages from the database up to a limit."""
-    db_messages = Message.objects.order_by("time")[:limit]
+    db_messages = reversed(Message.objects.order_by("-time")[:limit])
     messages, counter = {}, 0
     global_ip = ip_address(get_client_ip(request)).is_global
     for db_msg in db_messages:
