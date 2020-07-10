@@ -160,7 +160,7 @@ def messages_history(request, limit=100):
 
 
 def wake_on_lan(request):
-    """Run an external wak on lan script."""
+    """Run an external wake on lan script."""
     now = (
         datetime.utcnow()
         .replace(microsecond=0, tzinfo=timezone.utc)
