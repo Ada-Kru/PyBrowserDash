@@ -139,7 +139,7 @@ class App extends PureComponent {
             updatedUnseen: !state.updatedUnseen,
             messageHistory: {},
         })
-        window.title = `PyBrowserDash - ${this.numUnseen} unread messages`;
+        document.title = `PyBrowserDash - ${this.numUnseen} unread messages`;
     }
 
     // Remove certain messages from the message list.
@@ -153,8 +153,8 @@ class App extends PureComponent {
         this.numUnseen = Object.keys(state.unseenMessages).length
         this.setState({ updatedUnseen: !state.updatedUnseen })
         this.numUnseen > 0 ?
-            window.title = `PyBrowserDash - ${this.numUnseen} unread messages` :
-            window.title = 'PyBrowserDash';
+            document.title = `PyBrowserDash - ${this.numUnseen} unread messages` :
+            document.title = 'PyBrowserDash';
     }
 
     // Update the current unread messages.
