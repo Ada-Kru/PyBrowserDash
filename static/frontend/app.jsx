@@ -97,6 +97,13 @@ class App extends PureComponent {
         }
     }
 
+    // Set title text
+    _updateTitle= () => {
+        this.numUnseen > 0 ?
+            document.title = `PyBrowserDash - ${this.numUnseen} unread messages` :
+            document.title = 'PyBrowserDash';
+    }
+
     // Update the status bar with system statistics.
     _onSystemInfoUpdate = (update) => {
         this.setState({
@@ -139,7 +146,7 @@ class App extends PureComponent {
             updatedUnseen: !state.updatedUnseen,
             messageHistory: {},
         })
-        document.title = `PyBrowserDash - ${this.numUnseen} unread messages`;
+        this._updateTitle()
     }
 
     // Remove certain messages from the message list.
@@ -152,9 +159,7 @@ class App extends PureComponent {
         }
         this.numUnseen = Object.keys(state.unseenMessages).length
         this.setState({ updatedUnseen: !state.updatedUnseen })
-        this.numUnseen > 0 ?
-            document.title = `PyBrowserDash - ${this.numUnseen} unread messages` :
-            document.title = 'PyBrowserDash';
+        this._updateTitle()
     }
 
     // Update the current unread messages.
@@ -166,6 +171,7 @@ class App extends PureComponent {
             updatedUnseen: !this.state.updatedUnseen,
             messageHistory: {},
         })
+        this._updateTitle()
     }
 
     // Callback for clicking the mute button.
