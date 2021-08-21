@@ -17,4 +17,5 @@ urlpatterns = [
         name="messages_history",
     ),
     path("W/", views.wake_on_lan, name="wake_on_lan"),
+    path("rc/", views.remote_control, name="remote_control"),
 ]

@@ -1,0 +1,20 @@
+﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+DetectHiddenWindows, On
+SetTitleMatchMode, 2
+
+a::
+DetectHiddenWindows, Off
+WinMinimize, run_pybrowserdash
+WinHide, run_pybrowserdash
+WinMinimize, cmd.exe
+WinHide, cmd.exe
+DetectHiddenWindows, On
+ExitApp
+
+d::
+WinShow, run_pybrowserdash
+WinShow, cmd.exe
+ExitApp

@@ -161,11 +161,7 @@ def messages_history(request, limit=100):
 
 def wake_on_lan(request):
     """Run an external wake on lan script."""
-    now = (
-        datetime.utcnow()
-        .replace(microsecond=0, tzinfo=timezone.utc)
-        .isoformat()
-    )
+    now = datetime.utcnow().replace(microsecond=0, tzinfo=timezone.utc).isoformat()
     Message(
         sender="PyBrowserDash",
         text=f"WOL request from {request.META['REMOTE_ADDR']} at {now}",
@@ -175,3 +171,18 @@ def wake_on_lan(request):
     ).save()
     sp_call(("python", WOL_COMMAND))
     return JsonResponse({"error": None})
+
+
+def remote_control(request):
+    """Run an external wake on lan script."""
+    bg = request.scope["background_tasks"]
+
+    if request.method == "POST":
+        command = request.POST["cmd"]
+        emitters = request.POST["emitters"]
+
+        return JsonResponse({"error": None})
+    else:
+        return HttpResponseBadRequest(
+            "Only POST requests are allowed on this endpoint."
+        )

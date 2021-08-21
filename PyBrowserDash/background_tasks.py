@@ -2,6 +2,7 @@ from PyBrowserDash.music import MusicEventListener
 from PyBrowserDash.system_monitor import SystemMonitor
 from PyBrowserDash.weather import WeatherChecker
 from PyBrowserDash.text_speaker import TextSpeaker
+from PyBrowserDash.remote_control import RemoteControl
 from asyncio import create_task
 
 
@@ -15,6 +16,7 @@ class BackgroundTasks:
         self._weather_checker = WeatherChecker(self)
         self._tasks_started = False
         self._text_speaker = TextSpeaker()
+        self._remote_control = RemoteControl()
         self._muted = False
         self.unseen = {}
         self.no_repeat = {}
@@ -46,6 +48,10 @@ class BackgroundTasks:
     def is_muted(self):
         """Return if audio is muted."""
         return self._muted
+
+    def send_rc(self, command, emitters):
+        """Send a command to the remote control."""
+        return self._remote_control.send_cmd(command, emitters)
 
     def get_backend_status(self):
         """Get a dictionary with the backend's status."""
