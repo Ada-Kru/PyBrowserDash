@@ -1,6 +1,6 @@
 from threading import Thread
 from queue import Queue
-from serial import Serial
+from serial import Serial, SerialException
 
 try:
     from PyBrowserDash.local_config import COM_PORT, COM_BAUD
@@ -21,14 +21,17 @@ class RemoteControl:
         while True:
             command = self._q.get()
 
-            with Serial(COM_PORT, COM_BAUD) as ser:
-                ser.open()
-                ser.write(command)
-                ser.close()
+            try:
+                with Serial(COM_PORT, COM_BAUD, timeout=2) as ser:
+                    print(COM_PORT, COM_BAUD, command.encode())
+                    ser.write(command.encode())
+                    print(ser.readline())
+            except SerialException as e:
+                print(f"Error sending to {COM_PORT}: {e}")
 
     def send_cmd(self, command, emitters):
         """Create a command string to and add to send queue."""
-        command_type = "T"
+        # command_type = "T"
         emitter_1 = int(0 in emitters)
         emitter_2 = int(1 in emitters)
-        self._q.put(f"{command_type}_{emitter_1}_{emitter_2}_{command}")
+        self._q.put(f"{emitter_1}_{emitter_2}_{command}")

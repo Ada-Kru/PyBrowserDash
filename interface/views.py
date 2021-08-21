@@ -12,6 +12,7 @@ from json import loads, JSONDecodeError
 from .validation import new_msg_validator, seen_messages_validator
 from validx import exc
 from datetime import datetime, timezone
+from json import loads
 from time import time
 from subprocess import call as sp_call
 from ipaddress import ip_address
@@ -173,13 +174,16 @@ def wake_on_lan(request):
     return JsonResponse({"error": None})
 
 
+@csrf_exempt
 def remote_control(request):
     """Run an external wake on lan script."""
     bg = request.scope["background_tasks"]
 
     if request.method == "POST":
-        command = request.POST["cmd"]
-        emitters = request.POST["emitters"]
+        body = loads(request.body)
+        command = body["cmd"]
+        emitters = body["emitters"]
+        bg.send_rc(command, emitters)
 
         return JsonResponse({"error": None})
     else:

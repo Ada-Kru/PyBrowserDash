@@ -1,0 +1,1 @@
+curl -d "@rc.json" -X POST -H "Content-Type:application/json" http://localhost:6485/rc/
