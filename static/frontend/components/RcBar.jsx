@@ -4,7 +4,7 @@ class RcBar extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            emitters = [1, 2]
+            emitters: [1, 2]
         };
     }
 

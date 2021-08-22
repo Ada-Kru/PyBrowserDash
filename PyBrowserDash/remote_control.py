@@ -30,7 +30,7 @@ class RemoteControl:
                         ser.write(command.encode())
 
             except SerialException as e:
-                print(f"Error sending to {COM_PORT}: {e}")
+                # print(f"Error sending to {COM_PORT}: {e}")
                 sleep(10)
 
     def send_cmd(self, command, emitters):

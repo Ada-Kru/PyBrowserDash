@@ -3,6 +3,7 @@ import StatusBar from "./components/StatusBar"
 import MusicBar from "./components/MusicBar"
 import ControlBar from "./components/ControlBar"
 import MessageList from "./components/MessageList"
+import RcBar from "./components/RcBar"
 
 const WS_DISCONNECTED = 0
 const WS_CONNECTING = 1
@@ -244,7 +245,7 @@ class App extends PureComponent {
                         messageButtonClick={this._messageButtonClick}
                         toggleRcBar={this._toggleRcBar}
                     ></ControlBar>
-                    {this.rcPanelOpen ? <RcBar onSendCommand={this._sendRcCommand}/> : null}
+                    {this.state.rcPanelOpen ? <RcBar onSendCommand={this._sendRcCommand}/> : null}
                     {this.numUnseen || this.numHistory ? (
                         <MessageList
                             messages={msgs}
