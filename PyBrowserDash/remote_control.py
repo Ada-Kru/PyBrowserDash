@@ -20,11 +20,15 @@ class RemoteControl:
     def _run(self):
         """Send strings from queue on serial port."""
         while True:
+            self._q.queue.clear()
+
             try:
                 with Serial(COM_PORT, COM_BAUD, timeout=2) as ser:
+                    sleep(2.1)
                     while True:
                         command = self._q.get() + "\n"
                         ser.write(command.encode())
+
             except SerialException as e:
                 print(f"Error sending to {COM_PORT}: {e}")
                 sleep(10)

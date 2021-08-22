@@ -31,6 +31,7 @@ class App extends PureComponent {
             unseenMessages: {},
             messageHistory: {},
             updatedUnseen: false,
+            rcPanelOpen: false
         }
         this.ws = null
         this.musicActive = false
@@ -181,6 +182,10 @@ class App extends PureComponent {
         }
     }
 
+    _toggleRcBar = () => {
+        this.setState({ rcPanelOpen: !this.state.rcPanelOpen })
+    }
+
     // Callback for clicking the message button (displays history or marks
     // messages read.)
     _messageButtonClick = () => {
@@ -204,6 +209,13 @@ class App extends PureComponent {
                     }
                 )
         }
+    }
+
+    _sendRcCommand = (cmd, emitters) => {
+        fetch("rc/", {
+            method: "POST",
+            body: JSON.stringify({ cmd, emitters })
+        })
     }
 
     componentDidMount = () => {
@@ -230,12 +242,14 @@ class App extends PureComponent {
                         displayed={this.numUnseen || this.numHistory}
                         toggleMute={this._toggleMute}
                         messageButtonClick={this._messageButtonClick}
+                        toggleRcBar={this._toggleRcBar}
                     ></ControlBar>
+                    {this.rcPanelOpen ? <RcBar onSendCommand={this._sendRcCommand}/> : null}
                     {this.numUnseen || this.numHistory ? (
                         <MessageList
                             messages={msgs}
                             updatedUnseen={state.updatedUnseen}
-                        ></MessageList>
+                        />
                     ) : null}
                     {this.musicActive ? (
                         <MusicBar

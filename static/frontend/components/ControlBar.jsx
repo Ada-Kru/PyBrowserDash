@@ -43,6 +43,7 @@ class ControlBar extends PureComponent {
                 >
                     {state.backendMuted ? "Unmute" : "Mute"}
                 </button>
+                <button id="rcToggleButton" className="controlButton" onClick={this.props.toggleRcBar}>Remote</button>
             </div>
         )
     }
