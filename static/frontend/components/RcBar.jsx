@@ -19,7 +19,7 @@ class RcBar extends PureComponent {
         const newEmitters = [...this.state.emitters];
         const emitterNum = parseInt(evt.target.value);
         const index = newEmitters.indexOf(emitterNum);
-        if (evt.target.checked) {
+        if (!evt.target.checked) {
             if (index != -1) {
                 newEmitters.splice(index, 1);
             }
@@ -28,7 +28,6 @@ class RcBar extends PureComponent {
             newEmitters.push(emitterNum);
         }
 
-        console.log(newEmitters);
         if (newEmitters.length) {
             this.setState({ emitters: newEmitters });
         }
@@ -39,11 +38,21 @@ class RcBar extends PureComponent {
 
         return (
             <div id="rcBar">
-                <button id="rcFav1" data-cmd="21" className="controlButton" onClick={this.handleBtnClick}>Fav 1</button>
-                <button id="rcFav2" data-cmd="23" className="controlButton" onClick={this.handleBtnClick}>Fav 2</button>
-                <button id="rcFav3" data-cmd="18" className="controlButton" onClick={this.handleBtnClick}>Fav 3</button>
-                <button id="rcFav4" data-cmd="22" className="controlButton" onClick={this.handleBtnClick}>Fav 4</button>
-                <button id="rcFav5" data-cmd="77" className="controlButton" onClick={this.handleBtnClick}>Fav 5</button>
+                <button id="rcFav1" data-cmd="21" className="controlButton" onClick={this.handleBtnClick}>
+                    Fav 1
+                </button>
+                <button id="rcFav2" data-cmd="23" className="controlButton" onClick={this.handleBtnClick}>
+                    Fav 2
+                </button>
+                <button id="rcFav3" data-cmd="18" className="controlButton" onClick={this.handleBtnClick}>
+                    Fav 3
+                </button>
+                <button id="rcFav4" data-cmd="22" className="controlButton" onClick={this.handleBtnClick}>
+                    Fav 4
+                </button>
+                <button id="rcFav5" data-cmd="77" className="controlButton" onClick={this.handleBtnClick}>
+                    Fav 5
+                </button>
                 <button id="moreRed" data-cmd="76" className="controlButton" onClick={this.handleBtnClick}>
                     Red +
                 </button>
@@ -91,19 +100,21 @@ class RcBar extends PureComponent {
                     type="checkbox"
                     id="emitterEastCheckbox"
                     name="emitterEast"
-                    onClick={this.handleSelectEmitter}
+                    onChange={this.handleSelectEmitter}
+                    checked={state.emitters.includes(0)}
                     value="0" 
                 />
-                <label for="emitterEastCheckbox">East</label>
+                <label htmlFor="emitterEastCheckbox">East</label>
 
                 <input
                     type="checkbox"
                     id="emitterNorthCheckbox"
                     name="emitterNorth"
-                    onClick={this.handleSelectEmitter}
+                    onChange={this.handleSelectEmitter}
+                    checked={state.emitters.includes(1)}
                     value="1" 
                 />
-                <label for="emitterNorthCheckbox">North</label>
+                <label htmlFor="emitterNorthCheckbox">North</label>
             </div>
         )
     }
