@@ -14,7 +14,7 @@ custom_message_info = {
 # Console command to run for wake on LAN
 WOL_COMMAND = r""
 # COM port and baud for remote control
-COM_PORT = "COM3"
+COM_PORT = "COM4"
 COM_BAUD = 9600
 # If true use add /static/css/custom.css to the index html
 USE_CUSTOM_STYLES = False
