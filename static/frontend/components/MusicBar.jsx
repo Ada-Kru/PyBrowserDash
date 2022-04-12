@@ -7,6 +7,7 @@ class MusicBar extends PureComponent {
         this.state = {
             updatedMusic: this.props.updatedMusic,
             musicStatus: this.props.musicStatus,
+            artist: info.artist,
             album: info.album,
             title: info.title,
             length: info.length,
