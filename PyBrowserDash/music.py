@@ -24,6 +24,7 @@ class MusicEventListener:
             port=6980,
             active_item_column_map={
                 "%artist%": "artist",
+                "%album%": "album",
                 "%title%": "title",
                 "%length%": "length",
             },
@@ -65,14 +66,13 @@ class MusicEventListener:
         """Make a status dictionary for websocket updates."""
         state = self._current_state
         if state is None:
-            return {
-                "music": {"player_state": "disconnected", "active_item": {}}
-            }
+            return {"music": {"player_state": "disconnected", "active_item": {}}}
 
         active_info = {}
         if state.active_item.has_columns():
             col = state.active_item.columns
             active_info["artist"] = col.artist
+            active_info["album"] = col.album
             active_info["title"] = col.title
             active_info["length"] = state.active_item.duration
             active_info["position"] = state.estimated_position()

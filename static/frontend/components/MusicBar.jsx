@@ -7,7 +7,7 @@ class MusicBar extends PureComponent {
         this.state = {
             updatedMusic: this.props.updatedMusic,
             musicStatus: this.props.musicStatus,
-            artist: info.artist,
+            album: info.album,
             title: info.title,
             length: info.length,
             position: info.position,
@@ -27,6 +27,7 @@ class MusicBar extends PureComponent {
                     updatedMusic: this.props.updatedMusic,
                     musicStatus: this.props.musicStatus,
                     artist: info.artist,
+                    album: info.album,
                     title: info.title,
                     length: info.length,
                     position: info.position,
@@ -80,9 +81,9 @@ class MusicBar extends PureComponent {
     makeTitle = () => {
         let state = this.state
         if (state.musicStatus != "paused") {
-            return `${state.artist} - ${state.title}`
+            return `${state.artist} - ${state.album} - ${state.title}`
         } else {
-            return `(PAUSED) ${state.artist} - ${state.title} (PAUSED)`
+            return `(PAUSED) ${state.artist} - ${state.album} - ${state.title} (PAUSED)`
         }
     }
 
